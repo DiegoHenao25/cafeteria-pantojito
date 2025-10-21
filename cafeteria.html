@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cafetería UCP</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <!-- ================= Header ================= -->
+  <header>
+    <h1>Cafetería UCP</h1>
+    <nav>
+      <a href="#menu">Menú</a>
+      <a href="#carrito" onclick="mostrarCarrito()">Carrito</a>
+      <a href="login.html">Cerrar sesión</a>
+    </nav>
+  </header>
+
+  <!-- ================= Main ================= -->
+  <main class="menu">
+    <h2>Menú de Productos</h2>
+    <div class="productos" id="listaProductos">
+      <!-- Aquí se cargarán los productos dinámicamente -->
+    </div>
+  </main>
+
+  <!-- ================= Modal Carrito ================= -->
+  <div id="modalCarrito" class="modal" style="display: none;">
+    <div class="modal-contenido">
+      <h2>Mi Carrito</h2>
+      <div id="contenidoCarrito"></div>
+      <div id="totalCarrito"></div>
+      <button onclick="cerrarCarrito()">Cerrar</button>
+      <button onclick="realizarPedido()">Realizar Pedido</button>
+    </div>
+  </div>
+
+  <!-- ================= Footer ================= -->
+  <footer>
+    <p>© 2025 Cafetería UCP</p>
+  </footer>
+
+  <!-- ================= Script ================= -->
+  <script>
+    
+    // Función para cargar productos desde la base de datos
+    async function cargarProductos() {
+      const lista = document.getElementById("listaProductos");
+      lista.innerHTML = "<p>Cargando productos...</p>";
+
+      try {
+        const response = await fetch('/api/productos');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const productos = await response.json();
+
+        lista.innerHTML = "";
+
+        if (productos.length === 0) {
+          lista.innerHTML = "<p style='text-align: center; color: #666; font-size: 18px; margin: 50px 0;'>No hay productos disponibles en este momento.</p>";
+          return;
+        }
+
+        productos.forEach(p => {
+          if (p.disponible !== false) { // Solo mostrar productos disponibles
+            const item = document.createElement("div");
+            item.classList.add("producto");
+            item.innerHTML = `
+              <img src="${p.imagen_url || '/placeholder.svg?height=200&width=200'}" alt="${p.nombre}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+              <h3>${p.nombre}</h3>
+              <p class="descripcion">${p.descripcion || ''}</p>
+              <p class="precio">$${parseFloat(p.precio).toFixed(2)}</p>
+              <button onclick="agregarAlCarrito(${p.id}, '${p.nombre}', ${p.precio})" class="btn-agregar">Agregar al Carrito</button>
+            `;
+            lista.appendChild(item);
+          }
+        });
+      } catch (error) {
+        console.error('Error:', error);
+        lista.innerHTML = "<p style='text-align: center; color: red; font-size: 18px; margin: 50px 0;'>Error al cargar productos. Por favor, verifica que el servidor esté funcionando e intenta recargar la página.</p>";
+      }
+    }
+
+    // Cargar al entrar
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarProductos();
+      mostrarMensajeBienvenida();
+    });
+
+    // Mensaje de bienvenida
+    function mostrarMensajeBienvenida() {
+      const usuario = localStorage.getItem("usuario");
+      if (usuario) {
+        const saludo = document.createElement("div");
+        saludo.textContent = "Bienvenido, " + usuario;
+        saludo.style.cssText = "background: #4CAF50; color: white; padding: 10px; text-align: center; margin-bottom: 20px; border-radius: 4px;";
+        document.body.insertBefore(saludo, document.body.firstChild);
+      }
+    }
+
+    function agregarAlCarrito(id, nombre, precio) {
+      let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      
+      const productoExistente = carrito.find(item => item.id === id);
+      
+      if (productoExistente) {
+        productoExistente.cantidad += 1;
+      } else {
+        carrito.push({
+          id: id,
+          nombre: nombre,
+          precio: parseFloat(precio),
+          cantidad: 1
+        });
+      }
+      
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      alert(`${nombre} agregado al carrito por $${parseFloat(precio).toFixed(2)}`);
+    }
+
+    function mostrarCarrito() {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      const contenido = document.getElementById("contenidoCarrito");
+      const total = document.getElementById("totalCarrito");
+      
+      if (carrito.length === 0) {
+        contenido.innerHTML = "<p>Tu carrito está vacío</p>";
+        total.innerHTML = "";
+      } else {
+        let html = "<ul>";
+        let totalPrecio = 0;
+        
+        carrito.forEach((item, index) => {
+          const subtotal = item.precio * item.cantidad;
+          totalPrecio += subtotal;
+          html += `
+            <li>
+              ${item.nombre} - $${item.precio.toFixed(2)} x ${item.cantidad} = $${subtotal.toFixed(2)}
+              <button onclick="eliminarDelCarrito(${index})" style="margin-left: 10px; background: #f44336; color: white; border: none; padding: 2px 6px; border-radius: 3px;">X</button>
+            </li>
+          `;
+        });
+        
+        html += "</ul>";
+        contenido.innerHTML = html;
+        total.innerHTML = `<strong>Total: $${totalPrecio.toFixed(2)}</strong>`;
+      }
+      
+      document.getElementById("modalCarrito").style.display = "flex";
+    }
+
+    function cerrarCarrito() {
+      document.getElementById("modalCarrito").style.display = "none";
+    }
+
+    function eliminarDelCarrito(index) {
+      let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      carrito.splice(index, 1);
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      mostrarCarrito();
+    }
+
+    function realizarPedido() {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      
+      if (carrito.length === 0) {
+        alert("Tu carrito está vacío");
+        return;
+      }
+      
+      // Aquí podrías enviar el pedido a la API
+      alert("Pedido realizado exitosamente! (Funcionalidad de pedidos pendiente de implementar)");
+      localStorage.removeItem("carrito");
+      cerrarCarrito();
+    }
+  </script>
+</body>
+</html>
