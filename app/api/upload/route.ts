@@ -1,6 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { v2 as cloudinary } from "cloudinary"
 
+console.log("[v0] Cloudinary config check:", {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? "✓" : "✗",
+  api_key: process.env.CLOUDINARY_API_KEY ? "✓" : "✗",
+  api_secret: process.env.CLOUDINARY_API_SECRET ? "✓" : "✗",
+})
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -9,12 +15,21 @@ cloudinary.config({
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("[v0] Upload request received")
+
     const formData = await request.formData()
     const file = formData.get("file") as File
 
     if (!file) {
+      console.log("[v0] No file provided")
       return NextResponse.json({ error: "No se proporcionó archivo" }, { status: 400 })
     }
+
+    console.log("[v0] File details:", {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    })
 
     // Validar tipo de archivo
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
@@ -40,9 +55,14 @@ export async function POST(request: NextRequest) {
           },
           (error, result) => {
             if (error) {
-              console.error("[v0] Error subiendo a Cloudinary:", error)
-              resolve(NextResponse.json({ error: "Error al subir archivo" }, { status: 500 }))
+              console.error("[v0] Cloudinary upload error:", {
+                message: error.message,
+                http_code: error.http_code,
+                name: error.name,
+              })
+              resolve(NextResponse.json({ error: `Error al subir archivo: ${error.message}` }, { status: 500 }))
             } else {
+              console.log("[v0] Upload successful:", result?.secure_url)
               resolve(NextResponse.json({ url: result?.secure_url }, { status: 200 }))
             }
           },
@@ -50,7 +70,10 @@ export async function POST(request: NextRequest) {
         .end(buffer)
     })
   } catch (error) {
-    console.error("[v0] Error subiendo archivo:", error)
-    return NextResponse.json({ error: "Error al subir archivo" }, { status: 500 })
+    console.error("[v0] Upload error:", error)
+    return NextResponse.json(
+      { error: `Error al subir archivo: ${error instanceof Error ? error.message : "Unknown error"}` },
+      { status: 500 },
+    )
   }
 }
