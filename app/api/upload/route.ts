@@ -1,6 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { writeFile } from "fs/promises"
-import { join } from "path"
+import { v2 as cloudinary } from "cloudinary"
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,19 +30,25 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Generar nombre único para el archivo
-    const timestamp = Date.now()
-    const extension = file.name.split(".").pop()
-    const filename = `product-${timestamp}.${extension}`
-
-    // Guardar en la carpeta public/uploads
-    const path = join(process.cwd(), "public", "uploads", filename)
-    await writeFile(path, buffer)
-
-    // Retornar la URL pública
-    const imageUrl = `/uploads/${filename}`
-
-    return NextResponse.json({ url: imageUrl }, { status: 200 })
+    return new Promise((resolve) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            resource_type: "auto",
+            folder: "cafeteria-productos",
+            transformation: [{ width: 800, height: 800, crop: "limit" }],
+          },
+          (error, result) => {
+            if (error) {
+              console.error("[v0] Error subiendo a Cloudinary:", error)
+              resolve(NextResponse.json({ error: "Error al subir archivo" }, { status: 500 }))
+            } else {
+              resolve(NextResponse.json({ url: result?.secure_url }, { status: 200 }))
+            }
+          },
+        )
+        .end(buffer)
+    })
   } catch (error) {
     console.error("[v0] Error subiendo archivo:", error)
     return NextResponse.json({ error: "Error al subir archivo" }, { status: 500 })
