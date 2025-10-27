@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Coffee, CreditCard, Banknote, Smartphone, ArrowLeft, CheckCircle, Clock } from "lucide-react"
+import { Coffee, ArrowLeft, CheckCircle, Clock } from "lucide-react"
 
 interface CartItem {
   productId: number
@@ -22,7 +22,6 @@ interface CartItem {
 export default function CheckoutPage() {
   const router = useRouter()
   const [cart, setCart] = useState<CartItem[]>([])
-  const [metodoPago, setMetodoPago] = useState("efectivo")
   const [tiempoRecogida, setTiempoRecogida] = useState("15")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -89,89 +88,57 @@ export default function CheckoutPage() {
         cantidad: item.cantidad,
       }))
 
-      if (metodoPago === "nequi" || metodoPago === "pse" || metodoPago === "tarjeta") {
-        const reference = `ORDER-${Date.now()}`
-
-        // Create order first
-        const orderResponse = await fetch("/api/orders", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            items,
-            metodoPago,
-            tiempoRecogida: Number.parseInt(tiempoRecogida),
-            clienteInfo: formData,
-            paymentStatus: "pending",
-            reference,
-          }),
-        })
-
-        if (!orderResponse.ok) {
-          alert("Error al crear el pedido. Intenta de nuevo.")
-          setLoading(false)
-          return
-        }
-
-        const order = await orderResponse.json()
-
-        // Create Mercado Pago payment
-        const paymentResponse = await fetch("/api/create-mercadopago-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: getTotal(),
-            orderId: order.id,
-            customerEmail: formData.correo,
-            customerName: `${formData.nombre} ${formData.apellido}`,
-            customerPhone: formData.telefono,
-          }),
-        })
-
-        if (!paymentResponse.ok) {
-          alert("Error al iniciar el pago. Intenta de nuevo.")
-          setLoading(false)
-          return
-        }
-
-        const paymentData = await paymentResponse.json()
-
-        // Redirect to Mercado Pago checkout
-        window.location.href = paymentData.initPoint
-        return
-      }
-
-      // Cash payment - create order directly
-      const response = await fetch("/api/orders", {
+      // Create order first
+      const orderResponse = await fetch("/api/orders", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items,
-          metodoPago,
+          metodoPago: "mercadopago",
           tiempoRecogida: Number.parseInt(tiempoRecogida),
           clienteInfo: formData,
-          paymentStatus: "completed",
         }),
       })
 
-      if (response.ok) {
-        const order = await response.json()
-        setOrderNumber(order.id)
-        setSuccess(true)
-        localStorage.removeItem("cart")
-
-        setTimeout(() => {
-          router.push("/menu")
-        }, 5000)
-      } else {
-        const error = await response.json()
-        alert(error.error || "Error al procesar el pedido")
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json()
+        console.error("[v0] Error creating order:", errorData)
+        alert(errorData.error || "Error al crear el pedido. Intenta de nuevo.")
+        setLoading(false)
+        return
       }
+
+      const order = await orderResponse.json()
+
+      // Create Mercado Pago payment
+      const paymentResponse = await fetch("/api/create-mercadopago-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: getTotal(),
+          orderId: order.id,
+          customerEmail: formData.correo,
+          customerName: `${formData.nombre} ${formData.apellido}`,
+          customerPhone: formData.telefono,
+        }),
+      })
+
+      if (!paymentResponse.ok) {
+        const errorData = await paymentResponse.json()
+        console.error("[v0] Error creating payment:", errorData)
+        alert("Error al iniciar el pago. Intenta de nuevo.")
+        setLoading(false)
+        return
+      }
+
+      const paymentData = await paymentResponse.json()
+
+      // Clear cart and redirect to Mercado Pago
+      localStorage.removeItem("cart")
+      window.location.href = paymentData.initPoint
     } catch (error) {
       console.error("[v0] Error en checkout:", error)
       alert("Error al procesar el pedido")
-    } finally {
       setLoading(false)
     }
   }
@@ -334,70 +301,6 @@ export default function CheckoutPage() {
                   </RadioGroup>
                 </CardContent>
               </Card>
-
-              {/* Método de Pago */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Método de Pago</CardTitle>
-                  <CardDescription>Selecciona cómo deseas pagar</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RadioGroup value={metodoPago} onValueChange={setMetodoPago}>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                        <RadioGroupItem value="efectivo" id="efectivo" />
-                        <Label htmlFor="efectivo" className="flex items-center gap-3 cursor-pointer flex-1">
-                          <Banknote className="w-5 h-5 text-green-600" />
-                          <div>
-                            <p className="font-medium">Efectivo</p>
-                            <p className="text-sm text-gray-600">Paga al recoger tu pedido</p>
-                          </div>
-                        </Label>
-                      </div>
-
-                      <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                        <RadioGroupItem value="nequi" id="nequi" />
-                        <Label htmlFor="nequi" className="flex items-center gap-3 cursor-pointer flex-1">
-                          <Smartphone className="w-5 h-5 text-purple-600" />
-                          <div>
-                            <p className="font-medium">Nequi</p>
-                            <p className="text-sm text-gray-600">Pago rápido con tu cuenta Nequi</p>
-                          </div>
-                        </Label>
-                      </div>
-
-                      <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                        <RadioGroupItem value="pse" id="pse" />
-                        <Label htmlFor="pse" className="flex items-center gap-3 cursor-pointer flex-1">
-                          <Smartphone className="w-5 h-5 text-blue-600" />
-                          <div>
-                            <p className="font-medium">PSE</p>
-                            <p className="text-sm text-gray-600">Bancolombia, Davivienda, BBVA, etc.</p>
-                          </div>
-                        </Label>
-                      </div>
-
-                      <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                        <RadioGroupItem value="tarjeta" id="tarjeta" />
-                        <Label htmlFor="tarjeta" className="flex items-center gap-3 cursor-pointer flex-1">
-                          <CreditCard className="w-5 h-5 text-orange-600" />
-                          <div>
-                            <p className="font-medium">Tarjeta de Crédito/Débito</p>
-                            <p className="text-sm text-gray-600">Visa, Mastercard, American Express</p>
-                          </div>
-                        </Label>
-                      </div>
-                    </div>
-                  </RadioGroup>
-
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
-                    <p className="text-sm text-gray-700">
-                      <strong>Nota:</strong> Los pagos electrónicos serán procesados de forma segura a través de Mercado
-                      Pago. Para efectivo, paga al momento de recoger tu pedido.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Resumen del Pedido */}
@@ -451,8 +354,12 @@ export default function CheckoutPage() {
                     disabled={loading}
                     size="lg"
                   >
-                    {loading ? "Procesando..." : `Confirmar Pedido`}
+                    {loading ? "Procesando..." : "Pagar con Mercado Pago"}
                   </Button>
+
+                  <p className="text-xs text-center text-gray-500 mt-3">
+                    Serás redirigido a Mercado Pago para completar tu pago de forma segura
+                  </p>
                 </CardContent>
               </Card>
             </div>
