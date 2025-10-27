@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText } from "lucide-react"
+import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText, Menu } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 interface Category {
   id: number
@@ -39,6 +40,7 @@ export default function MenuPage() {
   const [user, setUser] = useState<any>(null)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -187,7 +189,13 @@ export default function MenuPage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-amber-600 p-2 rounded-lg">
+              <button
+                onClick={() => setShowMobileMenu(true)}
+                className="lg:hidden bg-amber-600 p-2 rounded-lg hover:bg-amber-700 transition-colors"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+              <div className="bg-amber-600 p-2 rounded-lg hidden lg:block">
                 <Coffee className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -195,7 +203,7 @@ export default function MenuPage() {
                 <p className="text-sm text-gray-600">Menú</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-4">
               {user && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <User className="w-4 h-4" />
@@ -243,9 +251,86 @@ export default function MenuPage() {
                 Salir
               </Button>
             </div>
+            <Button
+              variant="outline"
+              onClick={() => setShowCart(true)}
+              className="lg:hidden relative border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {getCartItemCount() > 0 && <Badge className="ml-auto bg-amber-600">{getCartItemCount()}</Badge>}
+            </Button>
           </div>
         </div>
       </header>
+
+      <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+        <SheetContent side="left" className="w-[280px] bg-white">
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2 text-amber-900">
+              <Coffee className="w-5 h-5" />
+              Menú
+            </SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 space-y-3">
+            {user && (
+              <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg">
+                <User className="w-5 h-5 text-amber-900" />
+                <div>
+                  <p className="font-semibold text-amber-900">{user.nombre}</p>
+                  {user.rol === "admin" && <Badge className="bg-purple-600 text-white text-xs">Admin</Badge>}
+                </div>
+              </div>
+            )}
+            {user?.rol === "admin" && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowMobileMenu(false)
+                  router.push("/admin")
+                }}
+                className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Panel Admin
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                router.push("/pedidos")
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Mis Pedidos
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                setShowCart(true)
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Carrito
+              {getCartItemCount() > 0 && <Badge className="ml-auto bg-amber-600">{getCartItemCount()}</Badge>}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                handleLogout()
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Salir
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">

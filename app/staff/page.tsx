@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Coffee, Clock, User, Phone, Mail, CreditCard, Package, CheckCircle, XCircle, LogOut } from "lucide-react"
+import { Coffee, Clock, User, Phone, Mail, CreditCard, Package, CheckCircle, XCircle, LogOut, Menu } from "lucide-react"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 interface OrderItem {
   id: number
@@ -36,6 +37,7 @@ export default function StaffPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<"todos" | "pendiente" | "completado">("pendiente")
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   useEffect(() => {
     checkAuth()
@@ -133,7 +135,7 @@ export default function StaffPage() {
                 <p className="text-sm text-gray-600">Gestión de Pedidos</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-4">
               {pendingCount > 0 && (
                 <Badge variant="destructive" className="text-lg px-4 py-2">
                   {pendingCount} Pendientes
@@ -155,9 +157,59 @@ export default function StaffPage() {
                 Salir
               </Button>
             </div>
+            <div className="flex lg:hidden items-center gap-2">
+              {pendingCount > 0 && (
+                <Badge variant="destructive" className="px-3 py-1">
+                  {pendingCount}
+                </Badge>
+              )}
+              <Button
+                variant="outline"
+                onClick={() => setShowMobileMenu(true)}
+                className="border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
+
+      <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+        <SheetContent side="right" className="w-[280px] bg-white">
+          <SheetHeader>
+            <SheetTitle className="text-amber-900">Menú Staff</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 space-y-3">
+            {pendingCount > 0 && (
+              <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                <p className="text-red-900 font-bold text-center">{pendingCount} Pedidos Pendientes</p>
+              </div>
+            )}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                router.push("/admin")
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              Volver al Menú
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                handleLogout()
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Salir
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Filters */}
       <div className="container mx-auto px-6 py-6">

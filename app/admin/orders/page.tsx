@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Clock, XCircle, ArrowLeft, LogOut } from "lucide-react"
+import { CheckCircle, Clock, XCircle, ArrowLeft, LogOut, Menu } from "lucide-react"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 interface OrderItem {
   id: number
@@ -33,6 +34,7 @@ export default function OrdersManagement() {
   const router = useRouter()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   useEffect(() => {
     checkAuth()
@@ -118,7 +120,7 @@ export default function OrdersManagement() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Gestión de Pedidos</h1>
-        <div className="flex gap-2">
+        <div className="hidden lg:flex gap-2">
           <Button
             variant="outline"
             onClick={() => router.push("/admin")}
@@ -136,7 +138,46 @@ export default function OrdersManagement() {
             Salir
           </Button>
         </div>
+        <Button
+          variant="outline"
+          onClick={() => setShowMobileMenu(true)}
+          className="lg:hidden border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+        >
+          <Menu className="w-5 h-5" />
+        </Button>
       </div>
+
+      <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+        <SheetContent side="right" className="w-[280px] bg-white">
+          <SheetHeader>
+            <SheetTitle className="text-amber-900">Menú</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 space-y-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                router.push("/admin")
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver al Panel
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                handleLogout()
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Salir
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>

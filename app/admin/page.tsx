@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Edit, Plus, LogOut, ClipboardList } from "lucide-react"
+import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 interface Category {
   id: number
@@ -41,6 +42,7 @@ export default function AdminDashboard() {
   const [newCategoryName, setNewCategoryName] = useState("")
   const [uploadingImage, setUploadingImage] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   useEffect(() => {
     checkAuth()
@@ -243,7 +245,7 @@ export default function AdminDashboard() {
     <div className="container mx-auto p-6 space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Panel de Administración - Cafetería Pantojito</h1>
-        <div className="flex gap-2">
+        <div className="hidden lg:flex gap-2">
           <Button
             variant="outline"
             onClick={() => router.push("/admin/orders")}
@@ -284,9 +286,79 @@ export default function AdminDashboard() {
             Salir
           </Button>
         </div>
+        <Button
+          variant="outline"
+          onClick={() => setShowMobileMenu(true)}
+          className="lg:hidden border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+        >
+          <Menu className="w-5 h-5" />
+        </Button>
       </div>
 
-      {/* Estadísticas */}
+      <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+        <SheetContent side="right" className="w-[280px] bg-white">
+          <SheetHeader>
+            <SheetTitle className="text-amber-900">Menú Admin</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 space-y-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                router.push("/admin/orders")
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <ClipboardList className="w-4 h-4 mr-2" />
+              Ver Pedidos
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                router.push("/menu")
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              Volver al Menú
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                setShowAddCategory(true)
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Agregar Categoría
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                setShowAddProduct(true)
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Agregar Producto
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
+                handleLogout()
+              }}
+              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Salir
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
@@ -314,7 +386,6 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Lista de Productos por Categoría */}
       {categories.map((category) => {
         const categoryProducts = products.filter((p) => p.categoryId === category.id)
         if (categoryProducts.length === 0) return null
@@ -360,7 +431,6 @@ export default function AdminDashboard() {
         )
       })}
 
-      {/* Modal para agregar/editar producto */}
       <Dialog
         open={showAddProduct || !!editingProduct}
         onOpenChange={(open) => {
@@ -492,7 +562,6 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Modal para agregar categoría */}
       <Dialog open={showAddCategory} onOpenChange={setShowAddCategory}>
         <DialogContent className="max-w-md bg-[#f5f0e6] border-2 border-amber-200">
           <DialogHeader className="border-b border-amber-200 pb-4">
