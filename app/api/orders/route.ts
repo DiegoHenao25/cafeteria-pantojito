@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
+import { sendOrderNotificationToStaff } from "@/lib/email"
 
 export async function GET() {
   try {
@@ -45,10 +46,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
-    const { items, metodoPago } = await request.json()
+    const { items, metodoPago, tiempoRecogida, clienteInfo } = await request.json()
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 })
+    }
+
+    if (!clienteInfo || !clienteInfo.nombre || !clienteInfo.cedula || !clienteInfo.telefono) {
+      return NextResponse.json({ error: "Información del cliente incompleta" }, { status: 400 })
     }
 
     // Calcular total
@@ -74,13 +79,17 @@ export async function POST(request: Request) {
       })
     }
 
-    // Crear orden
     const order = await prisma.order.create({
       data: {
         userId: session.userId,
         total,
         metodoPago: metodoPago || "efectivo",
         estado: "pendiente",
+        tiempoRecogida: tiempoRecogida || 15,
+        clienteNombre: `${clienteInfo.nombre} ${clienteInfo.apellido}`,
+        clienteCedula: clienteInfo.cedula,
+        clienteTelefono: clienteInfo.telefono,
+        clienteCorreo: clienteInfo.correo,
         orderItems: {
           create: orderItemsData,
         },
@@ -93,6 +102,27 @@ export async function POST(request: Request) {
         },
       },
     })
+
+    try {
+      await sendOrderNotificationToStaff({
+        orderNumber: order.id,
+        clienteNombre: order.clienteNombre,
+        clienteCedula: order.clienteCedula,
+        clienteTelefono: order.clienteTelefono,
+        clienteCorreo: order.clienteCorreo,
+        tiempoRecogida: order.tiempoRecogida,
+        metodoPago: order.metodoPago,
+        total: Number(order.total),
+        items: order.orderItems.map((item) => ({
+          nombre: item.product.nombre,
+          cantidad: item.cantidad,
+          precio: Number(item.precio),
+        })),
+      })
+    } catch (emailError) {
+      console.error("[v0] Error enviando email, pero orden creada:", emailError)
+      // No fallar la orden si el email falla
+    }
 
     return NextResponse.json(order)
   } catch (error) {

@@ -1,21 +1,21 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { v2 as cloudinary } from "cloudinary"
 
-console.log("[v0] Cloudinary config check:", {
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? "✓" : "✗",
-  api_key: process.env.CLOUDINARY_API_KEY ? "✓" : "✗",
-  api_secret: process.env.CLOUDINARY_API_SECRET ? "✓" : "✗",
-})
-
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: String(process.env.CLOUDINARY_CLOUD_NAME || ""),
+  api_key: String(process.env.CLOUDINARY_API_KEY || ""),
+  api_secret: String(process.env.CLOUDINARY_API_SECRET || ""),
+  secure: true,
 })
 
 export async function POST(request: NextRequest) {
   try {
     console.log("[v0] Upload request received")
+    console.log("[v0] Cloudinary config:", {
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      has_api_key: !!process.env.CLOUDINARY_API_KEY,
+      has_api_secret: !!process.env.CLOUDINARY_API_SECRET,
+    })
 
     const formData = await request.formData()
     const file = formData.get("file") as File
@@ -52,6 +52,9 @@ export async function POST(request: NextRequest) {
             resource_type: "auto",
             folder: "cafeteria-productos",
             transformation: [{ width: 800, height: 800, crop: "limit" }],
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET,
           },
           (error, result) => {
             if (error) {
@@ -59,6 +62,7 @@ export async function POST(request: NextRequest) {
                 message: error.message,
                 http_code: error.http_code,
                 name: error.name,
+                error: error,
               })
               resolve(NextResponse.json({ error: `Error al subir archivo: ${error.message}` }, { status: 500 }))
             } else {

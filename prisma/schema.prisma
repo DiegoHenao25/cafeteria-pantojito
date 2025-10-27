@@ -37,14 +37,21 @@ model Product {
 }
 
 model Order {
-  id            Int         @id @default(autoincrement())
-  userId        Int
-  user          User        @relation(fields: [userId], references: [id])
-  total         Decimal     @db.Decimal(10, 2)
-  estado        String      @default("pendiente") // "pendiente", "completado", "cancelado"
-  metodoPago    String?
-  createdAt     DateTime    @default(now())
-  orderItems    OrderItem[]
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  user            User        @relation(fields: [userId], references: [id])
+  total           Decimal     @db.Decimal(10, 2)
+  estado          String      @default("pendiente") // "pendiente", "completado", "cancelado"
+  metodoPago      String?
+  tiempoRecogida  Int?        @default(15) // tiempo en minutos
+  clienteNombre   String?
+  clienteCedula   String?
+  clienteTelefono String?
+  clienteCorreo   String?
+  createdAt       DateTime    @default(now())
+  orderItems      OrderItem[]
+  
+  @@map("Orders")
 }
 
 model OrderItem {
