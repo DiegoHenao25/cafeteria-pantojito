@@ -40,19 +40,26 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    console.log("[v0] Iniciando creación de orden")
     const session = await getSession()
 
     if (!session) {
+      console.log("[v0] Error: No hay sesión")
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
-    const { items, metodoPago, tiempoRecogida, clienteInfo } = await request.json()
+    const body = await request.json()
+    console.log("[v0] Body recibido:", JSON.stringify(body, null, 2))
+
+    const { items, metodoPago, tiempoRecogida, clienteInfo } = body
 
     if (!items || items.length === 0) {
+      console.log("[v0] Error: Carrito vacío")
       return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 })
     }
 
     if (!clienteInfo || !clienteInfo.nombre || !clienteInfo.cedula || !clienteInfo.telefono) {
+      console.log("[v0] Error: Información del cliente incompleta:", clienteInfo)
       return NextResponse.json({ error: "Información del cliente incompleta" }, { status: 400 })
     }
 
@@ -61,11 +68,13 @@ export async function POST(request: Request) {
     const orderItemsData = []
 
     for (const item of items) {
+      console.log("[v0] Procesando item:", item)
       const product = await prisma.product.findUnique({
         where: { id: item.productId },
       })
 
       if (!product || !product.disponible) {
+        console.log("[v0] Error: Producto no disponible:", item.productId)
         return NextResponse.json({ error: `Producto ${item.productId} no disponible` }, { status: 400 })
       }
 
@@ -79,14 +88,15 @@ export async function POST(request: Request) {
       })
     }
 
+    console.log("[v0] Creando orden con total:", total)
     const order = await prisma.order.create({
       data: {
         userId: session.userId,
         total,
-        metodoPago: metodoPago || "efectivo",
+        metodoPago: metodoPago || "mercadopago",
         estado: "pendiente",
         tiempoRecogida: tiempoRecogida || 15,
-        clienteNombre: `${clienteInfo.nombre} ${clienteInfo.apellido}`,
+        clienteNombre: `${clienteInfo.nombre} ${clienteInfo.apellido || ""}`.trim(),
         clienteCedula: clienteInfo.cedula,
         clienteTelefono: clienteInfo.telefono,
         clienteCorreo: clienteInfo.correo,
@@ -102,6 +112,8 @@ export async function POST(request: Request) {
         },
       },
     })
+
+    console.log("[v0] Orden creada exitosamente:", order.id)
 
     try {
       await sendOrderNotificationToStaff({
@@ -119,6 +131,7 @@ export async function POST(request: Request) {
           precio: Number(item.precio),
         })),
       })
+      console.log("[v0] Email enviado exitosamente")
     } catch (emailError) {
       console.error("[v0] Error enviando email, pero orden creada:", emailError)
       // No fallar la orden si el email falla
@@ -126,7 +139,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json(order)
   } catch (error) {
-    console.error("[v0] Error creando orden:", error)
-    return NextResponse.json({ error: "Error al crear orden" }, { status: 500 })
+    console.error("[v0] Error creando orden - Detalles completos:", error)
+    console.error("[v0] Error stack:", error instanceof Error ? error.stack : "No stack available")
+    return NextResponse.json(
+      {
+        error: "Error al crear orden",
+        details: error instanceof Error ? error.message : "Error desconocido",
+      },
+      { status: 500 },
+    )
   }
 }
