@@ -397,30 +397,48 @@ export default function AdminDashboard() {
               <CardDescription>{categoryProducts.length} productos</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                 {categoryProducts.map((product) => (
-                  <Card key={product.id}>
-                    <CardContent className="p-4">
+                  <Card key={product.id} className="overflow-hidden">
+                    <CardContent className="p-0">
                       {product.imagen && (
-                        <img
-                          src={product.imagen || "/placeholder.svg"}
-                          alt={product.nombre}
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
+                        <div className="relative w-full h-24 overflow-hidden rounded-t-lg">
+                          <img
+                            src={product.imagen || "/placeholder.svg"}
+                            alt={product.nombre}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                       )}
-                      <h3 className="font-semibold text-lg">{product.nombre}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{product.descripcion}</p>
-                      <p className="text-xl font-bold text-green-600">${product.precio.toLocaleString()}</p>
-                      <Badge variant={product.disponible ? "default" : "secondary"} className="mt-2">
-                        {product.disponible ? "Disponible" : "No disponible"}
-                      </Badge>
-                      <div className="flex gap-2 mt-3">
-                        <Button size="sm" variant="outline" onClick={() => startEdit(product)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button size="sm" variant="destructive" onClick={() => handleDelete(product.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      <div className="p-1.5 space-y-0.5">
+                        <h3 className="font-semibold text-xs line-clamp-1">{product.nombre}</h3>
+                        <div className="flex items-center justify-between gap-1">
+                          <p className="text-sm font-bold text-green-600">${product.precio.toLocaleString()}</p>
+                          <Badge
+                            variant={product.disponible ? "default" : "secondary"}
+                            className="text-[10px] px-1 py-0 h-4"
+                          >
+                            {product.disponible ? "Disp" : "No"}
+                          </Badge>
+                        </div>
+                        <div className="flex gap-1 pt-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => startEdit(product)}
+                            className="flex-1 h-6 px-1 text-xs"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(product.id)}
+                            className="flex-1 h-6 px-1 text-xs"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
