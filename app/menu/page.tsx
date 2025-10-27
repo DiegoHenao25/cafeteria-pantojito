@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings } from "lucide-react"
+import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface Category {
@@ -207,6 +207,14 @@ export default function MenuPage() {
                   Panel Admin
                 </Button>
               )}
+              <Button
+                variant="outline"
+                onClick={() => router.push("/pedidos")}
+                className="border-amber-600 text-amber-900 hover:bg-amber-50"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Mis Pedidos
+              </Button>
               <Button variant="outline" onClick={() => setShowCart(true)} className="relative">
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Carrito

@@ -5,7 +5,12 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   // Rutas públicas que no requieren autenticación
-  const isPublicPath = path === "/" || path === "/login" || path === "/register"
+  const isPublicPath =
+    path === "/" ||
+    path === "/login" ||
+    path === "/register" ||
+    path === "/forgot-password" ||
+    path === "/reset-password"
 
   // Obtener token de las cookies
   const token = request.cookies.get("auth-token")?.value || ""
@@ -24,5 +29,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/register", "/menu", "/admin", "/checkout"],
+  matcher: ["/", "/login", "/register", "/forgot-password", "/reset-password", "/menu", "/admin", "/checkout"],
 }
