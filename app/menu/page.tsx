@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText, Menu, Search } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -392,38 +392,42 @@ export default function MenuPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="aspect-[4/3] relative bg-gray-100">
+              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                <div className="h-32 relative bg-gray-100 flex-shrink-0">
                   <img
                     src={
                       product.imagen ||
-                      `/placeholder.svg?height=200&width=250&query=${encodeURIComponent(product.nombre) || "/placeholder.svg"}`
+                      `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre) || "/placeholder.svg"}`
                     }
                     alt={product.nombre}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
-                      target.src = `/placeholder.svg?height=200&width=250&query=${encodeURIComponent(product.nombre)}`
+                      target.src = `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre)}`
                     }}
                   />
-                  <Badge className="absolute top-2 right-2 bg-amber-600 text-xs">{product.category.nombre}</Badge>
+                  <Badge className="absolute top-1.5 right-1.5 bg-amber-600 text-[10px] px-1.5 py-0.5">
+                    {product.category.nombre}
+                  </Badge>
                 </div>
-                <CardHeader className="pb-2 pt-3 px-3">
-                  <CardTitle className="text-sm font-semibold line-clamp-1">{product.nombre}</CardTitle>
-                  <CardDescription className="text-xs line-clamp-2">{product.descripcion}</CardDescription>
+                <CardHeader className="pb-1 pt-2 px-2 flex-grow">
+                  <CardTitle className="text-xs font-semibold line-clamp-2 leading-tight min-h-[2.5rem]">
+                    {product.nombre}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 px-3 pb-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-lg font-bold text-green-600">${Number(product.precio).toLocaleString()}</span>
+                <CardContent className="pt-0 px-2 pb-2">
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-sm font-bold text-green-600 whitespace-nowrap">
+                      ${Number(product.precio).toLocaleString()}
+                    </span>
                     <Button
                       onClick={() => addToCart(product)}
                       size="sm"
-                      className="bg-amber-600 hover:bg-amber-700 h-8 px-2"
+                      className="bg-amber-600 hover:bg-amber-700 h-7 px-2 text-[10px]"
                     >
-                      <Plus className="w-3 h-3 mr-1" />
-                      <span className="text-xs">Agregar</span>
+                      <Plus className="w-3 h-3" />
                     </Button>
                   </div>
                 </CardContent>
