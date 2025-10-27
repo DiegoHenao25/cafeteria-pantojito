@@ -164,8 +164,14 @@ export default function MenuPage() {
   }
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" })
-    router.push("/login")
+    try {
+      localStorage.clear()
+      await fetch("/api/auth/logout", { method: "POST" })
+      window.location.href = "/login"
+    } catch (error) {
+      console.error("[v0] Error en logout:", error)
+      window.location.href = "/login"
+    }
   }
 
   const filteredProducts = selectedCategory ? products.filter((p) => p.categoryId === selectedCategory) : products
@@ -224,7 +230,7 @@ export default function MenuPage() {
                   </Badge>
                 )}
               </Button>
-              <Button variant="ghost" onClick={handleLogout}>
+              <Button variant="ghost" onClick={handleLogout} className="font-bold">
                 <LogOut className="w-4 h-4 mr-2" />
                 Salir
               </Button>

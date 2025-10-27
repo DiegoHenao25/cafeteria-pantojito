@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Coffee, Clock, User, Phone, Mail, CreditCard, Package, CheckCircle, XCircle } from "lucide-react"
+import { Coffee, Clock, User, Phone, Mail, CreditCard, Package, CheckCircle, XCircle, LogOut } from "lucide-react"
 
 interface OrderItem {
   id: number
@@ -56,6 +56,17 @@ export default function StaffPage() {
     } catch (error) {
       console.error("[v0] Error verificando autenticación:", error)
       router.push("/")
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      localStorage.clear()
+      await fetch("/api/auth/logout", { method: "POST" })
+      window.location.href = "/login"
+    } catch (error) {
+      console.error("[v0] Error en logout:", error)
+      window.location.href = "/login"
     }
   }
 
@@ -131,9 +142,17 @@ export default function StaffPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/admin")}
-                className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50"
+                className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50 font-bold"
               >
-                Ir a Admin
+                Volver al Menú
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="border-2 border-red-600 text-red-600 hover:bg-red-50 font-bold bg-transparent"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Salir
               </Button>
             </div>
           </div>

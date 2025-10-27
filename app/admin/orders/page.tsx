@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Clock, XCircle, ArrowLeft } from "lucide-react"
+import { CheckCircle, Clock, XCircle, ArrowLeft, LogOut } from "lucide-react"
 
 interface OrderItem {
   id: number
@@ -84,6 +84,17 @@ export default function OrdersManagement() {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      localStorage.clear()
+      await fetch("/api/auth/logout", { method: "POST" })
+      window.location.href = "/login"
+    } catch (error) {
+      console.error("[v0] Error en logout:", error)
+      window.location.href = "/login"
+    }
+  }
+
   const getStatusBadge = (estado: string) => {
     switch (estado) {
       case "pendiente":
@@ -107,14 +118,24 @@ export default function OrdersManagement() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Gestión de Pedidos</h1>
-        <Button
-          variant="outline"
-          onClick={() => router.push("/admin")}
-          className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver al Panel
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin")}
+            className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50 font-bold"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al Panel
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="border-2 border-red-600 text-red-600 hover:bg-red-50 font-bold bg-transparent"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Salir
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
