@@ -81,6 +81,7 @@ export default function CheckoutPage() {
     }
 
     setLoading(true)
+    console.log("[v0] Iniciando proceso de checkout...")
 
     try {
       const items = cart.map((item) => ({
@@ -88,7 +89,13 @@ export default function CheckoutPage() {
         cantidad: item.cantidad,
       }))
 
-      // Create order first
+      console.log("[v0] Creando orden con datos:", {
+        items,
+        metodoPago: "mercadopago",
+        tiempoRecogida: Number.parseInt(tiempoRecogida),
+        clienteInfo: formData,
+      })
+
       const orderResponse = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -100,17 +107,21 @@ export default function CheckoutPage() {
         }),
       })
 
+      const orderData = await orderResponse.json()
+      console.log("[v0] Respuesta de crear orden:", orderData)
+
       if (!orderResponse.ok) {
-        const errorData = await orderResponse.json()
-        console.error("[v0] Error creating order:", errorData)
-        alert(errorData.error || "Error al crear el pedido. Intenta de nuevo.")
+        console.error("[v0] Error al crear orden:", orderData)
+        alert(`Error al crear orden: ${orderData.error || orderData.details || "Error desconocido"}`)
         setLoading(false)
         return
       }
 
-      const order = await orderResponse.json()
+      const order = orderData
+      console.log("[v0] Orden creada exitosamente:", order)
 
       // Create Mercado Pago payment
+      console.log("[v0] Creando pago en Mercado Pago...")
       const paymentResponse = await fetch("/api/create-mercadopago-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -123,22 +134,23 @@ export default function CheckoutPage() {
         }),
       })
 
+      const paymentData = await paymentResponse.json()
+      console.log("[v0] Respuesta de Mercado Pago:", paymentData)
+
       if (!paymentResponse.ok) {
-        const errorData = await paymentResponse.json()
-        console.error("[v0] Error creating payment:", errorData)
-        alert("Error al iniciar el pago. Intenta de nuevo.")
+        console.error("[v0] Error al crear pago:", paymentData)
+        alert(`Error al iniciar pago: ${paymentData.error || paymentData.details || "Error desconocido"}`)
         setLoading(false)
         return
       }
 
-      const paymentData = await paymentResponse.json()
-
+      console.log("[v0] Redirigiendo a Mercado Pago:", paymentData.initPoint)
       // Clear cart and redirect to Mercado Pago
       localStorage.removeItem("cart")
       window.location.href = paymentData.initPoint
     } catch (error) {
       console.error("[v0] Error en checkout:", error)
-      alert("Error al procesar el pedido")
+      alert(`Error al procesar el pedido: ${error instanceof Error ? error.message : "Error desconocido"}`)
       setLoading(false)
     }
   }

@@ -41,7 +41,7 @@ model Order {
   userId          Int
   user            User        @relation(fields: [userId], references: [id])
   total           Decimal     @db.Decimal(10, 2)
-  estado          String      @default("pendiente") // "pendiente", "completado", "cancelado"
+  estado          String      @default("pendiente") // "pendiente", "listo", "completado", "cancelado"
   metodoPago      String?
   tiempoRecogida  Int?        @default(15) // tiempo en minutos
   clienteNombre   String?

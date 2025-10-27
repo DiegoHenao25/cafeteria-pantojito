@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Edit, Plus, LogOut } from "lucide-react"
+import { Trash2, Edit, Plus, LogOut, ClipboardList } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -238,6 +238,10 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Panel de Administración - Cafetería Pantojito</h1>
         <div className="flex gap-2">
+          <Button onClick={() => router.push("/admin/orders")} className="bg-blue-600 hover:bg-blue-700">
+            <ClipboardList className="w-4 h-4 mr-2" />
+            Ver Pedidos
+          </Button>
           <Button variant="outline" onClick={() => router.push("/menu")}>
             Volver al Menú
           </Button>
