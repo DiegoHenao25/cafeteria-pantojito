@@ -394,8 +394,8 @@ export default function MenuPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
-                <div className="h-32 relative bg-gray-100 flex-shrink-0">
+              <Card key={product.id} className="hover:shadow-lg transition-shadow flex flex-col p-0">
+                <div className="h-32 relative bg-gray-100 flex-shrink-0 overflow-hidden rounded-t-lg">
                   <img
                     src={
                       product.imagen ||
@@ -412,12 +412,12 @@ export default function MenuPage() {
                     {product.category.nombre}
                   </Badge>
                 </div>
-                <CardHeader className="pb-1 pt-2 px-2 flex-grow">
+                <CardHeader className="pb-1 pt-1.5 px-2 flex-grow">
                   <CardTitle className="text-xs font-semibold line-clamp-2 leading-tight min-h-[2.5rem]">
                     {product.nombre}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 px-2 pb-2">
+                <CardContent className="pt-0.5 px-2 pb-2">
                   <div className="flex items-center justify-between gap-1">
                     <span className="text-sm font-bold text-green-600 whitespace-nowrap">
                       ${Number(product.precio).toLocaleString()}
