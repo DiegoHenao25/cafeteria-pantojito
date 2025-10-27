@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText, Menu, Search } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -394,39 +394,39 @@ export default function MenuPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="hover:shadow-lg transition-shadow flex flex-col p-0">
-                <div className="h-32 relative bg-gray-100 flex-shrink-0 overflow-hidden rounded-t-lg">
-                  <img
-                    src={
-                      product.imagen ||
-                      `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre) || "/placeholder.svg"}`
-                    }
-                    alt={product.nombre}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre)}`
-                    }}
-                  />
-                  <Badge className="absolute top-1.5 right-1.5 bg-amber-600 text-[10px] px-1.5 py-0.5">
-                    {product.category.nombre}
-                  </Badge>
-                </div>
-                <CardHeader className="pb-0 pt-0.5 px-2 flex-grow">
-                  <CardTitle className="text-xs font-semibold line-clamp-2 leading-tight">{product.nombre}</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-1 px-2 pb-1.5">
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-sm font-bold text-green-600 whitespace-nowrap">
-                      ${Number(product.precio).toLocaleString()}
-                    </span>
-                    <Button
-                      onClick={() => addToCart(product)}
-                      size="sm"
-                      className="bg-amber-600 hover:bg-amber-700 h-7 px-2 text-[10px]"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </Button>
+              <Card key={product.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="relative w-full h-32 overflow-hidden rounded-t-lg">
+                    <img
+                      src={
+                        product.imagen ||
+                        `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre) || "/placeholder.svg"}`
+                      }
+                      alt={product.nombre}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.src = `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre)}`
+                      }}
+                    />
+                    <Badge className="absolute top-1.5 right-1.5 bg-amber-600 text-[10px] px-1.5 py-0.5">
+                      {product.category.nombre}
+                    </Badge>
+                  </div>
+                  <div className="p-1.5 space-y-0.5">
+                    <h3 className="font-semibold text-xs line-clamp-2 leading-tight">{product.nombre}</h3>
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-sm font-bold text-green-600 whitespace-nowrap">
+                        ${Number(product.precio).toLocaleString()}
+                      </span>
+                      <Button
+                        onClick={() => addToCart(product)}
+                        size="sm"
+                        className="bg-amber-600 hover:bg-amber-700 h-7 px-2 text-[10px]"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
