@@ -142,14 +142,14 @@ export default function StaffPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/admin")}
-                className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50 font-bold"
+                className="border-2 border-black text-black hover:bg-gray-50 font-bold"
               >
                 Volver al Menú
               </Button>
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="border-2 border-red-600 text-red-600 hover:bg-red-50 font-bold bg-transparent"
+                className="border-2 border-black text-black hover:bg-gray-50 font-bold bg-transparent"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Salir

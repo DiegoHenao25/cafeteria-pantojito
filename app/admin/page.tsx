@@ -247,7 +247,7 @@ export default function AdminDashboard() {
           <Button
             variant="outline"
             onClick={() => router.push("/admin/orders")}
-            className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-bold"
+            className="border-2 border-black text-black hover:bg-gray-50 font-bold"
           >
             <ClipboardList className="w-4 h-4 mr-2" />
             Ver Pedidos
@@ -255,21 +255,22 @@ export default function AdminDashboard() {
           <Button
             variant="outline"
             onClick={() => router.push("/menu")}
-            className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50 font-bold"
+            className="border-2 border-black text-black hover:bg-gray-50 font-bold"
           >
             Volver al Menú
           </Button>
           <Button
             variant="outline"
             onClick={() => setShowAddCategory(true)}
-            className="border-2 border-green-600 text-green-600 hover:bg-green-50 font-bold"
+            className="border-2 border-black text-black hover:bg-gray-50 font-bold"
           >
             <Plus className="w-4 h-4 mr-2" />
             Agregar Categoría
           </Button>
           <Button
+            variant="outline"
             onClick={() => setShowAddProduct(true)}
-            className="bg-amber-600 hover:bg-amber-700 text-white border-2 border-amber-700 font-bold"
+            className="border-2 border-black text-black hover:bg-gray-50 font-bold"
           >
             <Plus className="w-4 h-4 mr-2" />
             Agregar Producto
@@ -277,7 +278,7 @@ export default function AdminDashboard() {
           <Button
             variant="outline"
             onClick={handleLogout}
-            className="border-2 border-red-600 text-red-600 hover:bg-red-50 bg-transparent font-bold"
+            className="border-2 border-black text-black hover:bg-gray-50 font-bold bg-transparent"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Salir

@@ -207,7 +207,7 @@ export default function MenuPage() {
                 <Button
                   variant="outline"
                   onClick={() => router.push("/admin")}
-                  className="border-purple-600 text-purple-600 hover:bg-purple-50"
+                  className="border-2 border-black text-black hover:bg-gray-50 font-bold"
                 >
                   <Settings className="w-4 h-4 mr-2" />
                   Panel Admin
@@ -216,12 +216,16 @@ export default function MenuPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/pedidos")}
-                className="border-amber-600 text-amber-900 hover:bg-amber-50"
+                className="border-2 border-black text-black hover:bg-gray-50 font-bold"
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Mis Pedidos
               </Button>
-              <Button variant="outline" onClick={() => setShowCart(true)} className="relative">
+              <Button
+                variant="outline"
+                onClick={() => setShowCart(true)}
+                className="relative border-2 border-black text-black hover:bg-gray-50 font-bold"
+              >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Carrito
                 {getCartItemCount() > 0 && (
@@ -230,7 +234,11 @@ export default function MenuPage() {
                   </Badge>
                 )}
               </Button>
-              <Button variant="ghost" onClick={handleLogout} className="font-bold">
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="border-2 border-black text-black hover:bg-gray-50 font-bold bg-transparent"
+              >
                 <LogOut className="w-4 h-4 mr-2" />
                 Salir
               </Button>
