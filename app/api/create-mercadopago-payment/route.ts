@@ -32,17 +32,22 @@ export async function POST(request: NextRequest) {
         name: customerName,
         email: customerEmail,
         phone: {
+          area_code: "57", // Added area code for Colombia
           number: customerPhone,
         },
       },
       back_urls: {
-        success: `${appUrl}/payment-success?orderId=${orderId}`,
-        failure: `${appUrl}/payment-failure?orderId=${orderId}`,
-        pending: `${appUrl}/payment-pending?orderId=${orderId}`,
+        success: `${appUrl}/checkout/success?orderId=${orderId}`, // Fixed success URL
+        failure: `${appUrl}/checkout/failure?orderId=${orderId}`, // Fixed failure URL
+        pending: `${appUrl}/checkout/failure?orderId=${orderId}`, // Fixed pending URL
       },
       auto_return: "approved",
       external_reference: orderId.toString(),
       notification_url: `${appUrl}/api/mercadopago-webhook`,
+      statement_descriptor: "CAFETERIA PANTOJITO", // Added statement descriptor
+      payment_methods: {
+        installments: 1, // Set to 1 installment only
+      },
     }
 
     console.log("[v0] Preference creada:", JSON.stringify(preference, null, 2))
