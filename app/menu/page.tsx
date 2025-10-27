@@ -412,12 +412,10 @@ export default function MenuPage() {
                     {product.category.nombre}
                   </Badge>
                 </div>
-                <CardHeader className="pb-0 pt-1 px-2 flex-grow">
-                  <CardTitle className="text-xs font-semibold line-clamp-2 leading-tight min-h-[2.5rem]">
-                    {product.nombre}
-                  </CardTitle>
+                <CardHeader className="pb-0 pt-0.5 px-2 flex-grow">
+                  <CardTitle className="text-xs font-semibold line-clamp-2 leading-tight">{product.nombre}</CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 px-2 pb-2">
+                <CardContent className="pt-1 px-2 pb-1.5">
                   <div className="flex items-center justify-between gap-1">
                     <span className="text-sm font-bold text-green-600 whitespace-nowrap">
                       ${Number(product.precio).toLocaleString()}
