@@ -107,7 +107,11 @@ export default function OrdersManagement() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Gestión de Pedidos</h1>
-        <Button variant="outline" onClick={() => router.push("/admin")}>
+        <Button
+          variant="outline"
+          onClick={() => router.push("/admin")}
+          className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50"
+        >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Panel
         </Button>

@@ -128,7 +128,11 @@ export default function StaffPage() {
                   {pendingCount} Pendientes
                 </Badge>
               )}
-              <Button variant="outline" onClick={() => router.push("/admin")}>
+              <Button
+                variant="outline"
+                onClick={() => router.push("/admin")}
+                className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50"
+              >
                 Ir a Admin
               </Button>
             </div>

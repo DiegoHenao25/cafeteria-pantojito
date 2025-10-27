@@ -5,13 +5,18 @@ import { sendOrderNotificationToStaff } from "@/lib/email"
 
 export async function GET() {
   try {
+    console.log("[v0] GET /api/orders - Iniciando...")
     const session = await getSession()
 
+    console.log("[v0] Sesión obtenida:", session ? `userId: ${session.userId}, rol: ${session.rol}` : "No hay sesión")
+
     if (!session) {
+      console.log("[v0] No hay sesión, retornando 401")
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
     const whereClause = session.rol === "admin" ? {} : { userId: session.userId }
+    console.log("[v0] Where clause:", whereClause)
 
     const orders = await prisma.order.findMany({
       where: whereClause,
@@ -30,6 +35,9 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
     })
+
+    console.log("[v0] Órdenes encontradas:", orders.length)
+    console.log("[v0] Detalles de órdenes:", JSON.stringify(orders.map((o) => ({ id: o.id, userId: o.userId }))))
 
     return NextResponse.json(orders)
   } catch (error) {

@@ -238,21 +238,41 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Panel de Administración - Cafetería Pantojito</h1>
         <div className="flex gap-2">
-          <Button onClick={() => router.push("/admin/orders")} className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin/orders")}
+            className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+          >
             <ClipboardList className="w-4 h-4 mr-2" />
             Ver Pedidos
           </Button>
-          <Button variant="outline" onClick={() => router.push("/menu")}>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/menu")}
+            className="border-2 border-amber-600 text-amber-600 hover:bg-amber-50"
+          >
             Volver al Menú
           </Button>
-          <Button variant="outline" onClick={() => setShowAddCategory(true)}>
+          <Button
+            variant="outline"
+            onClick={() => setShowAddCategory(true)}
+            className="border-2 border-green-600 text-green-600 hover:bg-green-50"
+          >
+            <Plus className="w-4 h-4 mr-2" />
             Agregar Categoría
           </Button>
-          <Button onClick={() => setShowAddProduct(true)}>
+          <Button
+            onClick={() => setShowAddProduct(true)}
+            className="bg-amber-600 hover:bg-amber-700 text-white border-2 border-amber-700"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Agregar Producto
           </Button>
-          <Button variant="outline" onClick={handleLogout}>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="border-2 border-red-600 text-red-600 hover:bg-red-50 bg-transparent"
+          >
             <LogOut className="w-4 h-4 mr-2" />
             Salir
           </Button>
