@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText, Menu } from "lucide-react"
+import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText, Menu, Search } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Input } from "@/components/ui/input"
 
 interface Category {
   id: number
@@ -39,6 +40,7 @@ export default function MenuPage() {
   const [showCart, setShowCart] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [mounted, setMounted] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
@@ -176,7 +178,11 @@ export default function MenuPage() {
     }
   }
 
-  const filteredProducts = selectedCategory ? products.filter((p) => p.categoryId === selectedCategory) : products
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = selectedCategory ? p.categoryId === selectedCategory : true
+    const matchesSearch = p.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCategory && matchesSearch
+  })
 
   if (loading || !mounted) {
     return <div className="flex items-center justify-center min-h-screen">Cargando menú...</div>
@@ -334,9 +340,22 @@ export default function MenuPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
-        <div className="mb-8">
+        <div className="mb-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Nuestro Menú</h2>
           <p className="text-gray-600">Descubre nuestros deliciosos productos frescos</p>
+        </div>
+
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              type="text"
+              placeholder="Buscar productos... (ej: limón)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 w-full border-2 border-amber-200 focus:border-amber-500 rounded-lg"
+            />
+          </div>
         </div>
 
         {/* Category Filter */}
@@ -365,40 +384,46 @@ export default function MenuPage() {
         {filteredProducts.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center">
-              <p className="text-gray-500">No hay productos disponibles en este momento.</p>
+              <p className="text-gray-500">
+                {searchQuery
+                  ? `No se encontraron productos con "${searchQuery}"`
+                  : "No hay productos disponibles en este momento."}
+              </p>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="aspect-square relative bg-gray-100">
+                <div className="aspect-[4/3] relative bg-gray-100">
                   <img
                     src={
                       product.imagen ||
-                      `/placeholder.svg?height=300&width=300&query=${encodeURIComponent(product.nombre) || "/placeholder.svg"}`
+                      `/placeholder.svg?height=200&width=250&query=${encodeURIComponent(product.nombre) || "/placeholder.svg"}`
                     }
                     alt={product.nombre}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
-                      target.src = `/placeholder.svg?height=300&width=300&query=${encodeURIComponent(product.nombre)}`
+                      target.src = `/placeholder.svg?height=200&width=250&query=${encodeURIComponent(product.nombre)}`
                     }}
                   />
-                  <Badge className="absolute top-2 right-2 bg-amber-600">{product.category.nombre}</Badge>
+                  <Badge className="absolute top-2 right-2 bg-amber-600 text-xs">{product.category.nombre}</Badge>
                 </div>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">{product.nombre}</CardTitle>
-                  <CardDescription className="text-sm line-clamp-2">{product.descripcion}</CardDescription>
+                <CardHeader className="pb-2 pt-3 px-3">
+                  <CardTitle className="text-sm font-semibold line-clamp-1">{product.nombre}</CardTitle>
+                  <CardDescription className="text-xs line-clamp-2">{product.descripcion}</CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-green-600">
-                      ${Number(product.precio).toLocaleString()}
-                    </span>
-                    <Button onClick={() => addToCart(product)} size="sm" className="bg-amber-600 hover:bg-amber-700">
-                      <Plus className="w-4 h-4 mr-1" />
-                      Agregar
+                <CardContent className="pt-0 px-3 pb-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-lg font-bold text-green-600">${Number(product.precio).toLocaleString()}</span>
+                    <Button
+                      onClick={() => addToCart(product)}
+                      size="sm"
+                      className="bg-amber-600 hover:bg-amber-700 h-8 px-2"
+                    >
+                      <Plus className="w-3 h-3 mr-1" />
+                      <span className="text-xs">Agregar</span>
                     </Button>
                   </div>
                 </CardContent>
