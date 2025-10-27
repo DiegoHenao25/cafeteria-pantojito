@@ -399,7 +399,10 @@ export default function AdminDashboard() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                 {categoryProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden">
+                  <Card
+                    key={product.id}
+                    className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow"
+                  >
                     <CardContent className="p-0">
                       {product.imagen && (
                         <div className="relative w-full h-24 overflow-hidden rounded-t-lg">
