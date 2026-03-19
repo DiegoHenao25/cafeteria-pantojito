@@ -1,0 +1,65 @@
+CREATE TABLE IF NOT EXISTS `User` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  `nombre` VARCHAR(255) NOT NULL,
+  `rol` VARCHAR(50) NOT NULL DEFAULT 'cliente',
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Category` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NOT NULL UNIQUE,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Product` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NOT NULL,
+  `descripcion` TEXT,
+  `precio` DECIMAL(10, 2) NOT NULL,
+  `imagen` VARCHAR(500),
+  `disponible` BOOLEAN NOT NULL DEFAULT TRUE,
+  `categoryId` INT NOT NULL,
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Orders` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userId` INT NOT NULL,
+  `total` DECIMAL(10, 2) NOT NULL,
+  `estado` VARCHAR(50) NOT NULL DEFAULT 'pendiente',
+  `metodoPago` VARCHAR(100),
+  `tiempoRecogida` INT DEFAULT 15,
+  `clienteNombre` VARCHAR(255),
+  `clienteCedula` VARCHAR(50),
+  `clienteTelefono` VARCHAR(50),
+  `clienteCorreo` VARCHAR(255),
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `OrderItem` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `orderId` INT NOT NULL,
+  `productId` INT NOT NULL,
+  `cantidad` INT NOT NULL,
+  `precio` DECIMAL(10, 2) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`orderId`) REFERENCES `Orders`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Otp` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL,
+  `codigo` VARCHAR(10) NOT NULL,
+  `expiresAt` TIMESTAMP NOT NULL,
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

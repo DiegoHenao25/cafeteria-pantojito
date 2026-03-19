@@ -1,0 +1,160 @@
+import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
+import { getSession } from "@/lib/auth"
+import { sendOrderNotificationToStaff } from "@/lib/email"
+
+export async function GET() {
+  try {
+    console.log("GET /api/orders - Iniciando...")
+    const session = await getSession()
+
+    console.log("Sesión obtenida:", session ? `userId: ${session.userId}, rol: ${session.rol}` : "No hay sesión")
+
+    if (!session) {
+      console.log("No hay sesión, retornando 401")
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
+
+    const whereClause = session.rol === "admin" ? {} : { userId: session.userId }
+    console.log("Where clause:", whereClause)
+
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            nombre: true,
+            email: true,
+          },
+        },
+        orderItems: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    })
+
+    console.log("Órdenes encontradas:", orders.length)
+    console.log("Detalles de órdenes:", JSON.stringify(orders.map((o) => ({ id: o.id, userId: o.userId }))))
+
+    return NextResponse.json(orders)
+  } catch (error) {
+    console.error("Error obteniendo órdenes:", error)
+    return NextResponse.json({ error: "Error al obtener órdenes" }, { status: 500 })
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    console.log("Iniciando creación de orden")
+    const session = await getSession()
+
+    if (!session) {
+      console.log("Error: No hay sesión")
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
+
+    const body = await request.json()
+    console.log("Body recibido:", JSON.stringify(body, null, 2))
+
+    const { items, metodoPago, tiempoRecogida, clienteInfo } = body
+
+    if (!items || items.length === 0) {
+      console.log("Error: Carrito vacío")
+      return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 })
+    }
+
+    if (!clienteInfo || !clienteInfo.nombre || !clienteInfo.cedula || !clienteInfo.telefono) {
+      console.log("Error: Información del cliente incompleta:", clienteInfo)
+      return NextResponse.json({ error: "Información del cliente incompleta" }, { status: 400 })
+    }
+
+    // Calcular total
+    let total = 0
+    const orderItemsData = []
+
+    for (const item of items) {
+      console.log("Procesando item:", item)
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId },
+      })
+
+      if (!product || !product.disponible) {
+        console.log("Error: Producto no disponible:", item.productId)
+        return NextResponse.json({ error: `Producto ${item.productId} no disponible` }, { status: 400 })
+      }
+
+      const subtotal = Number(product.precio) * item.cantidad
+      total += subtotal
+
+      orderItemsData.push({
+        productId: product.id,
+        cantidad: item.cantidad,
+        precio: product.precio,
+      })
+    }
+
+    console.log("Creando orden con total:", total)
+    const order = await prisma.order.create({
+      data: {
+        userId: session.userId,
+        total,
+        metodoPago: metodoPago || "mercadopago",
+        estado: "pendiente",
+        tiempoRecogida: tiempoRecogida || 15,
+        clienteNombre: `${clienteInfo.nombre} ${clienteInfo.apellido || ""}`.trim(),
+        clienteCedula: clienteInfo.cedula,
+        clienteTelefono: clienteInfo.telefono,
+        clienteCorreo: clienteInfo.correo,
+        orderItems: {
+          create: orderItemsData,
+        },
+      },
+      include: {
+        orderItems: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    })
+
+    console.log("Orden creada exitosamente:", order.id)
+
+    try {
+      await sendOrderNotificationToStaff({
+        orderNumber: order.id,
+        clienteNombre: order.clienteNombre,
+        clienteCedula: order.clienteCedula,
+        clienteTelefono: order.clienteTelefono,
+        clienteCorreo: order.clienteCorreo,
+        tiempoRecogida: order.tiempoRecogida,
+        metodoPago: order.metodoPago,
+        total: Number(order.total),
+        items: order.orderItems.map((item) => ({
+          nombre: item.product.nombre,
+          cantidad: item.cantidad,
+          precio: Number(item.precio),
+        })),
+      })
+      console.log("Email enviado exitosamente")
+    } catch (emailError) {
+      console.error("Error enviando email, pero orden creada:", emailError)
+      // No fallar la orden si el email falla
+    }
+
+    return NextResponse.json(order)
+  } catch (error) {
+    console.error("Error creando orden - Detalles completos:", error)
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack available")
+    return NextResponse.json(
+      {
+        error: "Error al crear orden",
+        details: error instanceof Error ? error.message : "Error desconocido",
+      },
+      { status: 500 },
+    )
+  }
+}

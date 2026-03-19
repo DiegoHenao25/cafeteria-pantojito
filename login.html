@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login | Cafetería UCP</title>
+
+  <!-- Fuentes e iconos -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <div class="contenedor-login">
+
+    <!-- ========== SLIDER ========== -->
+    <div class="contenedor-slider">
+      <div class="slider">
+        <div class="slide fade active">
+          <img src="img/theo.jpg" alt="">
+        </div>
+        <div class="slide fade">
+          <img src="img/comida.jpeg" alt="">
+        </div>
+      </div>
+      <a href="#" class="prev"><i class="fas fa-chevron-left"></i></a>
+      <a href="#" class="next"><i class="fas fa-chevron-right"></i></a>
+      <div class="dots"></div>
+    </div>
+
+    <!-- ========== FORMULARIOS ========== -->
+    <div class="contenedor-texto">
+      <div class="contenedor-form">
+        <h1 class="titulo">¡Bienvenido a Cafetería UCP!</h1>
+        <p class="descripcion">Ingresa a tu cuenta para disfrutar del catálogo de nuestras cafeterías universitarias.</p>
+
+        <!-- Tabs -->
+        <ul class="tabs-links">
+          <li class="tab-link active" data-tab="login">Iniciar Sesión</li>
+          <li class="tab-link" data-tab="registro">Registrarse</li>
+        </ul>
+
+        <!-- ===== Formulario Login ===== -->
+        <form id="formLogin" class="formulario active">
+          <div class="error-text"></div>
+          <input type="email" placeholder="Correo electrónico" class="input-text" name="correo" autocomplete="off"> 
+          <div class="grupo-input">
+            <input type="password" placeholder="Contraseña" name="password" class="input-text clave">
+            <button type="button" class="icono fas fa-eye mostrarClave"></button>
+          </div>
+          <a href="#" class="link">¿Olvidaste tu contraseña?</a>
+          <button class="btn" id="btnLogin" type="button">Iniciar Sesión</button>
+        </form>
+
+        <!-- ===== Formulario Registro ===== -->
+        <form id="formRegistro" class="formulario">
+          <div class="error-text"></div>
+          <input type="text" placeholder="Nombre completo" class="input-text" name="nombre" autocomplete="off"> 
+          <input type="email" placeholder="Correo electrónico" class="input-text" name="correo" autocomplete="off"> 
+          <div class="grupo-input">
+            <input type="password" placeholder="Contraseña" name="password" class="input-text clave">
+            <button type="button" class="icono fas fa-eye mostrarClave"></button>
+          </div>
+          <div class="grupo-input">
+            <input type="password" placeholder="Confirmar contraseña" name="password2" class="input-text clave">
+            <button type="button" class="icono fas fa-eye mostrarClave"></button>
+          </div>
+          <label class="contenedor-cbx animate">
+            <input type="checkbox" name="terminos">
+            <span class="cbx-marca"></span>
+            Acepto los <a href="#" class="link">Términos y Condiciones</a>
+          </label>
+          <button class="btn" id="btnRegistro" type="button">Crear Cuenta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/app.js"></script>
+</body>
+</html>

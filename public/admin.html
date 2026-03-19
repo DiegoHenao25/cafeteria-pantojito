@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administración - Cafetería UCP</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+  <h1>Panel de Administración - Cafetería UCP</h1>
+
+  <!-- Formulario para agregar productos -->
+  <div class="form-producto">
+    <h2>Agregar Producto</h2>
+    <input type="text" id="nombre" placeholder="Nombre del producto" required>
+    <textarea id="descripcion" placeholder="Descripción del producto"></textarea>
+    <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+    <input type="file" id="imagen" accept="image/png, image/jpeg" required>
+    <button onclick="agregarProducto()">Agregar</button>
+  </div>
+
+  <!-- Modal para editar producto -->
+  <div id="modalEditar" class="modal">
+    <div class="modal-contenido form-producto">
+      <h2>Editar Producto</h2>
+      <form id="formEditar">
+        <input type="hidden" id="editarId">
+        <input type="text" id="editarNombre" placeholder="Nuevo nombre" required>
+        <textarea id="editarDescripcion" placeholder="Nueva descripción"></textarea>
+        <input type="number" id="editarPrecio" placeholder="Nuevo precio" step="0.01" required>
+        <input type="file" id="editarImagen" accept="image/png, image/jpeg">
+
+        <button type="submit" class="boton-guardar">Guardar Cambios</button>
+        <button type="button" class="boton-cancelar" onclick="cerrarModal()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabla de productos -->
+  <h2 style="text-align:center;">Lista de Productos</h2>
+  <table class="tabla-productos" id="tablaProductos">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+  </script>
+</body>
+</html>

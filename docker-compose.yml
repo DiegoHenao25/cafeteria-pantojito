@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: cafeteria_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: cafeteria_ucp
+      MYSQL_USER: cafeteria_user
+      MYSQL_PASSWORD: cafeteria_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cafeteria_network
+
+  api:
+    build: .
+    container_name: cafeteria_api
+    environment:
+      DB_HOST: mysql:3306
+      DB_USER: cafeteria_user
+      DB_PASSWORD: cafeteria_pass
+      DB_NAME: cafeteria_ucp
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - cafeteria_network
+
+volumes:
+  mysql_data:
+
+networks:
+  cafeteria_network:
+    driver: bridge

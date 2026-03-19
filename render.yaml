@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: cafeteria-pantojito
+    env: node
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+
+databases:
+  - name: cafeteria-pantojito-db
+    databaseName: cafeteria_pantojito
+    user: cafeteria_user
