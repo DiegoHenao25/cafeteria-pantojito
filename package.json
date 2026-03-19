@@ -58,7 +58,7 @@
     "lucide-react": "^0.454.0",
     "mercadopago": "^2.0.15",
     "mysql2": "latest",
-    "next": "15.1.6",
+    "next": "15.1.11",
     "nodemailer": "latest",
     "path": "0.12.7",
     "react": "^19.0.0",
