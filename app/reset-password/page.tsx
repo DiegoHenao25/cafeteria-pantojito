@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Eye, EyeOff, CheckCircle, ArrowLeft } from "lucide-react"
+import { Eye, EyeOff, CheckCircle, ArrowLeft, PartyPopper } from "lucide-react"
 import Link from "next/link"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams()
@@ -23,6 +24,7 @@ function ResetPasswordForm() {
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   useEffect(() => {
     const emailParam = searchParams.get("email")
@@ -64,8 +66,7 @@ function ResetPasswordForm() {
       const data = await response.json()
 
       if (response.ok) {
-        alert("Contrasena actualizada exitosamente")
-        router.push("/login")
+        setShowSuccessModal(true)
       } else {
         setError(data.error || "Error al restablecer contrasena")
       }
@@ -76,8 +77,41 @@ function ResetPasswordForm() {
     }
   }
 
+  const handleGoToLogin = () => {
+    setShowSuccessModal(false)
+    router.push("/login")
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+      {/* Modal de exito */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md bg-white border-2 border-pink-200">
+          <div className="flex flex-col items-center justify-center py-6 space-y-4">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-12 h-12 text-green-500" />
+            </div>
+            <div className="flex items-center gap-2">
+              <PartyPopper className="w-6 h-6 text-pink-400" />
+              <h2 className="text-2xl font-bold text-amber-900">Cambio Exitoso</h2>
+              <PartyPopper className="w-6 h-6 text-pink-400" />
+            </div>
+            <p className="text-center text-amber-700">
+              Tu contrasena ha sido actualizada correctamente. Ya puedes iniciar sesion con tu nueva contrasena.
+            </p>
+            <div className="flex justify-center mb-4">
+              <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-16 h-16 rounded-full object-cover shadow-lg border-4 border-pink-200" />
+            </div>
+            <Button 
+              onClick={handleGoToLogin}
+              className="w-full bg-pink-300 hover:bg-pink-400 text-amber-900 font-semibold"
+            >
+              Ir a Iniciar Sesion
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">

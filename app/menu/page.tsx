@@ -450,7 +450,7 @@ export default function MenuPage() {
             {cart.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 mx-auto text-amber-300 mb-4" />
-                <p className="text-amber-700 text-lg">Tu carrito está vacío</p>
+                <p className="text-amber-700 text-lg">Tu carrito est�� vacío</p>
                 <p className="text-amber-600 text-sm mt-2">Agrega productos para comenzar tu pedido</p>
               </div>
             ) : (
