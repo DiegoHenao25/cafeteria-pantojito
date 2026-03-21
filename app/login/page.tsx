@@ -116,24 +116,29 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+              <Button type="submit" className="w-full bg-pink-400 hover:bg-pink-500 text-white" disabled={loading}>
+                {loading ? "Iniciando sesion..." : "Iniciar Sesion"}
               </Button>
             </form>
 
-            <div className="mt-4 text-center">
-              <Link href="/forgot-password" className="text-sm text-pink-400 hover:text-pink-500 font-medium">
+            <div className="mt-6 text-center">
+              <Link 
+                href="/forgot-password" 
+                className="inline-block px-4 py-2 text-sm text-pink-500 font-medium border-2 border-pink-200 rounded-full hover:bg-pink-50 hover:border-pink-300 transition-all"
+              >
                 Olvidaste tu contrasena?
               </Link>
             </div>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-amber-700">
-                No tienes cuenta?{" "}
-                <Link href="/register" className="text-pink-400 hover:text-pink-500 font-medium">
-                  Registrate aqui
-                </Link>
-              </p>
+            <div className="mt-4 text-center">
+              <div className="inline-block px-4 py-2 border-2 border-amber-200 rounded-full bg-amber-50/50">
+                <p className="text-sm text-amber-700">
+                  No tienes cuenta?{" "}
+                  <Link href="/register" className="text-pink-500 hover:text-pink-600 font-semibold">
+                    Registrate aqui
+                  </Link>
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>

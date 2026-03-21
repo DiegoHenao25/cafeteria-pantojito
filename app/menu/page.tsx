@@ -435,13 +435,13 @@ export default function MenuPage() {
 
       {/* Cart Modal */}
       <Dialog open={showCart} onOpenChange={setShowCart}>
-        <DialogContent className="max-w-2xl max-h-[90vh] bg-[#f5f0e6] border-2 border-amber-200">
-          <DialogHeader className="border-b border-amber-200 pb-4">
+        <DialogContent className="max-w-2xl max-h-[90vh] bg-gradient-to-b from-pink-50 to-white border-2 border-pink-200">
+          <DialogHeader className="border-b border-pink-200 pb-4">
             <DialogTitle className="text-2xl font-bold text-amber-900 flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6" />
+              <ShoppingCart className="w-6 h-6 text-pink-400" />
               Carrito de Compras
             </DialogTitle>
-            <DialogDescription className="text-amber-700">
+            <DialogDescription className="text-pink-400">
               Revisa tu pedido antes de continuar al pago
             </DialogDescription>
           </DialogHeader>
@@ -449,9 +449,9 @@ export default function MenuPage() {
           <div className="space-y-4 pt-4">
             {cart.length === 0 ? (
               <div className="text-center py-12">
-                <ShoppingCart className="w-16 h-16 mx-auto text-amber-300 mb-4" />
-                <p className="text-amber-700 text-lg">Tu carrito est�� vacío</p>
-                <p className="text-amber-600 text-sm mt-2">Agrega productos para comenzar tu pedido</p>
+                <ShoppingCart className="w-16 h-16 mx-auto text-pink-300 mb-4" />
+                <p className="text-amber-900 text-lg">Tu carrito esta vacio</p>
+                <p className="text-pink-400 text-sm mt-2">Agrega productos para comenzar tu pedido</p>
               </div>
             ) : (
               <>
@@ -459,7 +459,7 @@ export default function MenuPage() {
                   {cart.map((item) => (
                     <div
                       key={item.product.id}
-                      className="flex items-center gap-4 p-4 bg-white rounded-lg border border-amber-200 shadow-sm"
+                      className="flex items-center gap-4 p-4 bg-white rounded-lg border border-pink-200 shadow-sm"
                     >
                       <img
                         src={
@@ -467,7 +467,7 @@ export default function MenuPage() {
                           `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(item.product.nombre) || "/placeholder.svg"}`
                         }
                         alt={item.product.nombre}
-                        className="w-20 h-20 object-cover rounded-md border border-amber-200"
+                        className="w-20 h-20 object-cover rounded-md border border-pink-200"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
                           target.src = `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(item.product.nombre)}`
@@ -477,12 +477,12 @@ export default function MenuPage() {
                         <h4 className="font-semibold text-amber-900 truncate">{item.product.nombre}</h4>
                         <p className="text-sm text-amber-700">${Number(item.product.precio).toLocaleString()} c/u</p>
                       </div>
-                      <div className="flex items-center gap-2 bg-amber-50 rounded-lg p-1 border border-amber-200">
+                      <div className="flex items-center gap-2 bg-pink-50 rounded-lg p-1 border border-pink-200">
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => removeFromCart(item.product.id)}
-                          className="h-8 w-8 p-0 hover:bg-amber-100"
+                          className="h-8 w-8 p-0 hover:bg-pink-100"
                         >
                           <Minus className="w-4 h-4 text-amber-900" />
                         </Button>
@@ -491,7 +491,7 @@ export default function MenuPage() {
                           size="sm"
                           variant="ghost"
                           onClick={() => addToCart(item.product)}
-                          className="h-8 w-8 p-0 hover:bg-amber-100"
+                          className="h-8 w-8 p-0 hover:bg-pink-100"
                         >
                           <Plus className="w-4 h-4 text-amber-900" />
                         </Button>
@@ -503,14 +503,14 @@ export default function MenuPage() {
                   ))}
                 </div>
 
-                <div className="border-t-2 border-amber-300 pt-4 bg-amber-50 -mx-6 px-6 py-4 rounded-lg">
+                <div className="border-t-2 border-pink-200 pt-4 bg-pink-50 -mx-6 px-6 py-4 rounded-lg">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-amber-900 font-medium">Subtotal:</span>
                     <span className="text-amber-900 font-semibold text-lg">${getCartTotal().toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xl font-bold border-t border-amber-300 pt-2 mt-2">
+                  <div className="flex justify-between items-center text-xl font-bold border-t border-pink-200 pt-2 mt-2">
                     <span className="text-amber-900">Total:</span>
-                    <span className="text-green-700">${getCartTotal().toLocaleString()}</span>
+                    <span className="text-pink-500">${getCartTotal().toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -518,7 +518,7 @@ export default function MenuPage() {
                   <Button
                     variant="outline"
                     onClick={() => setShowCart(false)}
-                    className="flex-1 border-amber-600 text-amber-900 hover:bg-amber-50 font-semibold"
+                    className="flex-1 border-2 border-pink-300 text-amber-900 hover:bg-pink-50 font-semibold"
                   >
                     Seguir Comprando
                   </Button>
@@ -528,7 +528,7 @@ export default function MenuPage() {
                       setShowCart(false)
                       router.push("/checkout")
                     }}
-                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
+                    className="flex-1 bg-pink-400 hover:bg-pink-500 text-white font-semibold"
                   >
                     Ir a Pagar
                   </Button>
