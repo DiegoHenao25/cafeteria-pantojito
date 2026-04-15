@@ -53,10 +53,12 @@ export default function MisPedidosPage() {
     switch (estado) {
       case "pendiente":
         return <Badge className="bg-[#e9e076]/30 text-[#655642] border border-[#e9e076]">Pendiente</Badge>
+      case "en_proceso":
+        return <Badge className="bg-[#d38BB6]/20 text-[#d38BB6] border border-[#d38BB6]">En Proceso</Badge>
       case "listo":
         return <Badge className="bg-[#7BB39C]/20 text-[#7BB39C] border border-[#7BB39C]">Listo para recoger</Badge>
-      case "completado":
-        return <Badge className="bg-[#d38488]/20 text-[#d38488] border border-[#d38488]">Completado</Badge>
+      case "entregado":
+        return <Badge className="bg-[#655642]/20 text-[#655642] border border-[#655642]">Entregado</Badge>
       case "cancelado":
         return <Badge variant="destructive">Cancelado</Badge>
       default:

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -209,8 +210,8 @@ export default function MenuPage() {
             </div>
             <div className="hidden lg:flex items-center gap-4">
               {user && (
-                <button
-                  onClick={() => router.push("/perfil")}
+                <Link
+                  href="/perfil"
                   className="flex items-center gap-2 text-sm text-[#655642] hover:bg-[#d38488]/10 px-3 py-2 rounded-lg transition-colors"
                 >
                   <div className="w-8 h-8 bg-[#d38488]/20 rounded-full flex items-center justify-center">
@@ -218,7 +219,7 @@ export default function MenuPage() {
                   </div>
                   <span>{user.nombre}</span>
                   {user.rol === "admin" && <Badge className="bg-[#d38488] text-[#655642]">Admin</Badge>}
-                </button>
+                </Link>
               )}
               {user?.rol === "admin" && (
                 <Button

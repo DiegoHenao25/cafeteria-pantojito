@@ -63,11 +63,11 @@ export default function PedidosPage() {
             Pendiente
           </Badge>
         )
-      case "preparando":
+      case "en_proceso":
         return (
-          <Badge className="bg-[#d38BB6]/20 text-[#655642] border border-[#d38BB6]">
+          <Badge className="bg-[#d38BB6]/20 text-[#d38BB6] border border-[#d38BB6]">
             <Package className="w-3 h-3 mr-1" />
-            Preparando
+            En Proceso
           </Badge>
         )
       case "listo":
@@ -78,9 +78,15 @@ export default function PedidosPage() {
           </Badge>
         )
       case "entregado":
+        return (
+          <Badge className="bg-[#655642]/20 text-[#655642] border border-[#655642]">
+            <CheckCircle2 className="w-3 h-3 mr-1" />
+            Entregado
+          </Badge>
+        )
       case "completado":
         return (
-          <Badge className="bg-[#d38488]/20 text-[#d38488] border border-[#d38488]">
+          <Badge className="bg-[#7BB39C]/20 text-[#7BB39C] border border-[#7BB39C]">
             <CheckCircle2 className="w-3 h-3 mr-1" />
             Completado
           </Badge>

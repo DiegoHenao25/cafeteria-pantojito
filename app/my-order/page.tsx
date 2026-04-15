@@ -64,9 +64,10 @@ export default function MyOrderPage() {
 
   const getOrderTimeline = (estado: string) => {
     const steps = [
-      { id: "pendiente", label: "Pedido recibido", icon: Package },
-      { id: "listo", label: "Listo para recoger", icon: CheckCircle },
-      { id: "completado", label: "Entregado", icon: Coffee },
+      { id: "pendiente", label: "Recibido", icon: Package },
+      { id: "en_proceso", label: "En Proceso", icon: Clock },
+      { id: "listo", label: "Listo", icon: CheckCircle },
+      { id: "entregado", label: "Entregado", icon: Coffee },
     ]
 
     const currentIndex = steps.findIndex((step) => step.id === estado)
@@ -82,12 +83,21 @@ export default function MyOrderPage() {
     switch (estado) {
       case "pendiente":
         return {
-          color: "bg-[#d38488]",
-          textColor: "text-[#d38488]",
-          bgColor: "bg-[#d38488]/10",
+          color: "bg-[#e9e076]",
+          textColor: "text-[#655642]",
+          bgColor: "bg-[#e9e076]/10",
+          title: "Pedido recibido",
+          description: "Tu pedido ha sido recibido y pronto comenzara a prepararse",
+          badge: "Pendiente",
+        }
+      case "en_proceso":
+        return {
+          color: "bg-[#d38BB6]",
+          textColor: "text-[#d38BB6]",
+          bgColor: "bg-[#d38BB6]/10",
           title: "Preparando tu pedido",
           description: "Nuestro equipo esta trabajando en tu orden",
-          badge: "En preparacion",
+          badge: "En Proceso",
         }
       case "listo":
         return {
@@ -98,14 +108,14 @@ export default function MyOrderPage() {
           description: "Puedes pasar a recogerlo en la cafeteria",
           badge: "Listo para recoger",
         }
-case "completado":
+      case "entregado":
         return {
-          color: "bg-[#7BB39C]",
-          textColor: "text-[#7BB39C]",
-          bgColor: "bg-[#7BB39C]/10",
-          title: "Pedido completado",
+          color: "bg-[#655642]",
+          textColor: "text-[#655642]",
+          bgColor: "bg-[#655642]/10",
+          title: "Pedido entregado",
           description: "Gracias por tu compra. Disfruta tu pedido!",
-          badge: "Completado",
+          badge: "Entregado",
         }
       case "cancelado":
         return {

@@ -2,10 +2,11 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { isAdmin } from "@/lib/auth"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const order = await prisma.order.findUnique({
-      where: { id: Number.parseInt(params.id) },
+      where: { id: Number.parseInt(id) },
       include: {
         orderItems: {
           include: {
@@ -26,8 +27,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const admin = await isAdmin()
     if (!admin) {
       return NextResponse.json({ error: "No autorizado" }, { status: 403 })
@@ -36,7 +38,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { estado } = await request.json()
 
     const order = await prisma.order.update({
-      where: { id: Number.parseInt(params.id) },
+      where: { id: Number.parseInt(id) },
       data: { estado },
       include: {
         orderItems: {

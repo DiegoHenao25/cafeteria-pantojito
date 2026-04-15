@@ -103,10 +103,12 @@ export default function OrdersManagement() {
     switch (estado) {
       case "pendiente":
         return <Badge className="bg-[#e9e076]/30 text-[#655642] border border-[#e9e076]">Pendiente</Badge>
+      case "en_proceso":
+        return <Badge className="bg-[#d38BB6]/20 text-[#d38BB6] border border-[#d38BB6]">En Proceso</Badge>
       case "listo":
         return <Badge className="bg-[#7BB39C]/20 text-[#7BB39C] border border-[#7BB39C]">Listo</Badge>
-      case "completado":
-        return <Badge className="bg-[#d38488]/20 text-[#d38488] border border-[#d38488]">Completado</Badge>
+      case "entregado":
+        return <Badge className="bg-[#655642]/20 text-[#655642] border border-[#655642]">Entregado</Badge>
       case "cancelado":
         return <Badge variant="destructive">Cancelado</Badge>
       default:
@@ -215,29 +217,45 @@ export default function OrdersManagement() {
         </Sheet>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="border-[#d38488]/20">
-            <CardHeader>
-              <CardTitle className="text-[#655642]">Pendientes</CardTitle>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <Card className="border-[#e9e076]/50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-[#655642]">Pendientes</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-[#e9e076]">{orders.filter((o) => o.estado === "pendiente").length}</p>
+              <p className="text-2xl font-bold text-[#e9e076]">{orders.filter((o) => o.estado === "pendiente").length}</p>
             </CardContent>
           </Card>
-          <Card className="border-[#d38488]/20">
-            <CardHeader>
-              <CardTitle className="text-[#655642]">Listos</CardTitle>
+          <Card className="border-[#d38BB6]/50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-[#655642]">En Proceso</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-[#7BB39C]">{orders.filter((o) => o.estado === "listo").length}</p>
+              <p className="text-2xl font-bold text-[#d38BB6]">{orders.filter((o) => o.estado === "en_proceso").length}</p>
             </CardContent>
           </Card>
-          <Card className="border-[#d38488]/20">
-            <CardHeader>
-              <CardTitle className="text-[#655642]">Total Hoy</CardTitle>
+          <Card className="border-[#7BB39C]/50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-[#655642]">Listos</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-[#d38488]">{orders.length}</p>
+              <p className="text-2xl font-bold text-[#7BB39C]">{orders.filter((o) => o.estado === "listo").length}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-[#655642]/30">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-[#655642]">Entregados</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-[#655642]">{orders.filter((o) => o.estado === "entregado").length}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-[#d38488]/30">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-[#655642]">Total Hoy</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-[#d38488]">{orders.length}</p>
             </CardContent>
           </Card>
         </div>
@@ -297,21 +315,45 @@ export default function OrdersManagement() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap items-center">
+                  {/* Indicador de progreso */}
+                  <div className="flex items-center gap-1 mr-4">
+                    <div className={`w-3 h-3 rounded-full ${order.estado === "pendiente" || order.estado === "en_proceso" || order.estado === "listo" || order.estado === "entregado" ? "bg-[#e9e076]" : "bg-gray-300"}`} />
+                    <div className={`w-8 h-1 ${order.estado === "en_proceso" || order.estado === "listo" || order.estado === "entregado" ? "bg-[#d38BB6]" : "bg-gray-300"}`} />
+                    <div className={`w-3 h-3 rounded-full ${order.estado === "en_proceso" || order.estado === "listo" || order.estado === "entregado" ? "bg-[#d38BB6]" : "bg-gray-300"}`} />
+                    <div className={`w-8 h-1 ${order.estado === "listo" || order.estado === "entregado" ? "bg-[#7BB39C]" : "bg-gray-300"}`} />
+                    <div className={`w-3 h-3 rounded-full ${order.estado === "listo" || order.estado === "entregado" ? "bg-[#7BB39C]" : "bg-gray-300"}`} />
+                    <div className={`w-8 h-1 ${order.estado === "entregado" ? "bg-[#655642]" : "bg-gray-300"}`} />
+                    <div className={`w-3 h-3 rounded-full ${order.estado === "entregado" ? "bg-[#655642]" : "bg-gray-300"}`} />
+                  </div>
+
+                  {/* Botones de accion */}
                   {order.estado === "pendiente" && (
+                    <Button onClick={() => updateOrderStatus(order.id, "en_proceso")} className="bg-[#d38BB6] hover:bg-[#d38BB6]/80 text-white">
+                      <Clock className="w-4 h-4 mr-2" />
+                      En Proceso
+                    </Button>
+                  )}
+                  {order.estado === "en_proceso" && (
                     <Button onClick={() => updateOrderStatus(order.id, "listo")} className="bg-[#7BB39C] hover:bg-[#7BB39C]/80 text-white">
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      Marcar como Listo
+                      Marcar Listo
                     </Button>
                   )}
                   {order.estado === "listo" && (
-                    <Button onClick={() => updateOrderStatus(order.id, "completado")} className="bg-[#d38488] hover:bg-[#d38488] text-white">
+                    <Button onClick={() => updateOrderStatus(order.id, "entregado")} className="bg-[#655642] hover:bg-[#655642]/80 text-white">
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      Marcar como Completado
+                      Entregado
                     </Button>
                   )}
-                  {(order.estado === "pendiente" || order.estado === "listo") && (
-                    <Button onClick={() => updateOrderStatus(order.id, "cancelado")} variant="destructive">
+                  {order.estado === "entregado" && (
+                    <span className="text-[#7BB39C] font-semibold flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      Pedido Completado
+                    </span>
+                  )}
+                  {(order.estado === "pendiente" || order.estado === "en_proceso" || order.estado === "listo") && (
+                    <Button onClick={() => updateOrderStatus(order.id, "cancelado")} variant="destructive" size="sm">
                       <XCircle className="w-4 h-4 mr-2" />
                       Cancelar
                     </Button>
