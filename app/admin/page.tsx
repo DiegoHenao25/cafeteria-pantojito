@@ -263,7 +263,7 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="hidden lg:flex items-center gap-3">
-              <span className="text-amber-700">Bienvenido, {userName}</span>
+              <span className="text-amber-700">Bienvenido</span>
               <Button
                 variant="outline"
                 onClick={handleLogout}
@@ -331,7 +331,7 @@ export default function AdminDashboard() {
               </SheetTitle>
             </SheetHeader>
             <div className="mt-6 space-y-3">
-              <p className="text-sm text-amber-700 px-2">Bienvenido, {userName}</p>
+              <p className="text-sm text-amber-700 px-2">Bienvenido</p>
               <Button
                 variant="outline"
                 onClick={() => { setShowMobileMenu(false); router.push("/admin/orders") }}

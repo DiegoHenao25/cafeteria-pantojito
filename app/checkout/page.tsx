@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ArrowLeft, Clock, CreditCard, Info } from "lucide-react"
-import Script from "next/script"
 
 interface CartItem {
   productId: number
@@ -19,45 +18,11 @@ interface CartItem {
   imagen: string | null
 }
 
-interface PriceBreakdown {
-  subtotal: number
-  comisionPago: number
-  comisionPorcentaje: string
-  total: number
-}
-
-declare global {
-  interface Window {
-    WidgetCheckout?: {
-      open: (config: WompiConfig) => void
-    }
-  }
-}
-
-interface WompiConfig {
-  currency: string
-  amountInCents: number
-  reference: string
-  publicKey: string
-  redirectUrl: string
-  signature?: { integrity: string }
-  customerData?: {
-    email: string
-    fullName: string
-    phoneNumber: string
-    phoneNumberPrefix: string
-    legalId: string
-    legalIdType: string
-  }
-}
-
 export default function CheckoutPage() {
   const router = useRouter()
   const [cart, setCart] = useState<CartItem[]>([])
   const [tiempoRecogida, setTiempoRecogida] = useState("15")
   const [loading, setLoading] = useState(false)
-  const [wompiLoaded, setWompiLoaded] = useState(false)
-  const [priceBreakdown, setPriceBreakdown] = useState<PriceBreakdown | null>(null)
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -85,14 +50,6 @@ export default function CheckoutPage() {
     if (savedCart) {
       const parsedCart = JSON.parse(savedCart)
       setCart(parsedCart)
-      const subtotal = parsedCart.reduce((total: number, item: CartItem) => total + item.precio * item.cantidad, 0)
-      const comision = Math.ceil(subtotal * 0.0198)
-      setPriceBreakdown({
-        subtotal,
-        comisionPago: comision,
-        comisionPorcentaje: "1.98%",
-        total: subtotal + comision,
-      })
     } else {
       router.push("/menu")
     }
@@ -129,11 +86,6 @@ export default function CheckoutPage() {
       return
     }
 
-    if (!wompiLoaded || !window.WidgetCheckout) {
-      alert("El sistema de pagos esta cargando, por favor espera un momento")
-      return
-    }
-
     setLoading(true)
 
     try {
@@ -160,47 +112,42 @@ export default function CheckoutPage() {
         return
       }
 
-      setPriceBreakdown(data.breakdown)
-
-      const wompiConfig: WompiConfig = {
-        currency: data.currency,
-        amountInCents: data.amountInCents,
-        reference: data.wompiReference,
-        publicKey: data.publicKey,
-        redirectUrl: data.redirectUrl,
-      }
-
-      if (data.signature) {
-        wompiConfig.signature = { integrity: data.signature }
-      }
-
-      wompiConfig.customerData = {
-        email: formData.correo,
-        fullName: `${formData.nombre} ${formData.apellido}`,
-        phoneNumber: formData.telefono,
-        phoneNumberPrefix: "57",
-        legalId: formData.cedula,
-        legalIdType: "CC",
-      }
-
+      // Limpiar carrito antes de redirigir
       localStorage.removeItem("cart")
-      window.WidgetCheckout?.open(wompiConfig)
+
+      // Construir URL de checkout de Wompi (redireccion directa)
+      const wompiUrl = new URL("https://checkout.wompi.co/p/")
+      wompiUrl.searchParams.append("public-key", data.publicKey)
+      wompiUrl.searchParams.append("currency", data.currency)
+      wompiUrl.searchParams.append("amount-in-cents", data.amountInCents.toString())
+      wompiUrl.searchParams.append("reference", data.wompiReference)
+      wompiUrl.searchParams.append("redirect-url", data.redirectUrl)
+      
+      // Datos del cliente
+      wompiUrl.searchParams.append("customer-data:email", formData.correo)
+      wompiUrl.searchParams.append("customer-data:full-name", `${formData.nombre} ${formData.apellido}`)
+      wompiUrl.searchParams.append("customer-data:phone-number", formData.telefono)
+      wompiUrl.searchParams.append("customer-data:phone-number-prefix", "57")
+      wompiUrl.searchParams.append("customer-data:legal-id", formData.cedula)
+      wompiUrl.searchParams.append("customer-data:legal-id-type", "CC")
+
+      // Agregar firma si existe
+      if (data.signature) {
+        wompiUrl.searchParams.append("signature:integrity", data.signature)
+      }
+
+      // Redirigir a Wompi
+      window.location.href = wompiUrl.toString()
+
     } catch (error) {
       console.error("Error en checkout:", error)
       alert(`Error al procesar el pedido: ${error instanceof Error ? error.message : "Error desconocido"}`)
-    } finally {
       setLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
-      <Script
-        src="https://checkout.wompi.co/widget.js"
-        onLoad={() => setWompiLoaded(true)}
-        strategy="lazyOnload"
-      />
-
       <header className="bg-white shadow-sm border-b border-pink-100">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
@@ -400,10 +347,10 @@ export default function CheckoutPage() {
                   <Button
                     type="submit"
                     className="w-full bg-pink-400 hover:bg-pink-500 text-white mt-6"
-                    disabled={loading || !wompiLoaded}
+                    disabled={loading}
                     size="lg"
                   >
-                    {loading ? "Procesando..." : !wompiLoaded ? "Cargando..." : "Pagar con Wompi"}
+                    {loading ? "Redirigiendo a Wompi..." : "Pagar con Wompi"}
                   </Button>
 
                   <div className="mt-4 p-3 bg-pink-50 rounded-lg border border-pink-200">

@@ -82,12 +82,13 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Configuración de Wompi
-    const publicKey = process.env.WOMPI_PUBLIC_KEY
+    // Configuracion de Wompi
+    const publicKey = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY || process.env.WOMPI_PUBLIC_KEY
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 
     if (!publicKey) {
-      return NextResponse.json({ error: "Wompi no configurado correctamente" }, { status: 500 })
+      console.error("[v0] WOMPI_PUBLIC_KEY no configurada")
+      return NextResponse.json({ error: "Wompi no configurado correctamente. Falta NEXT_PUBLIC_WOMPI_PUBLIC_KEY" }, { status: 500 })
     }
 
     // Generar firma de integridad para Wompi
