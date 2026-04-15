@@ -1,11 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { LogOut, Coffee } from "lucide-react"
 
 interface User {
   id: number
@@ -16,6 +13,7 @@ interface User {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -34,43 +32,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     setUser(parsedUser)
+    setLoading(false)
   }, [router])
 
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    router.push("/login")
-  }
-
-  if (!user) {
-    return <div className="flex items-center justify-center min-h-screen">Cargando...</div>
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Coffee className="w-8 h-8 text-amber-600" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">Cafetería UCP</h1>
-                <p className="text-sm text-gray-600">Panel de Administración</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
-                Bienvenido, <span className="font-medium">{user.nombre}</span>
-              </span>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Cerrar Sesión
-              </Button>
-            </div>
-          </div>
+  if (loading || !user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-white">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-pink-300 border-t-pink-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-amber-700">Cargando...</p>
         </div>
-      </header>
-      <main>{children}</main>
-    </div>
-  )
+      </div>
+    )
+  }
+
+  // Solo retorna los children, el header ya esta en cada pagina de admin
+  return <>{children}</>
 }

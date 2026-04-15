@@ -209,9 +209,9 @@ export default function CheckoutPage() {
                       name="cedula"
                       value={formData.cedula}
                       onChange={handleInputChange}
-                      placeholder="1234567890"
+                      placeholder=""
                       required
-                      className="border-pink-200 focus:border-pink-400"
+                      className="border-pink-200 focus:border-pink-400 placeholder:text-pink-200"
                     />
                   </div>
 
@@ -224,9 +224,9 @@ export default function CheckoutPage() {
                         type="tel"
                         value={formData.telefono}
                         onChange={handleInputChange}
-                        placeholder="3001234567"
+                        placeholder=""
                         required
-                        className="border-pink-200 focus:border-pink-400"
+                        className="border-pink-200 focus:border-pink-400 placeholder:text-pink-200"
                       />
                     </div>
                     <div className="space-y-2">
