@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
+
 import { ArrowLeft, Search, Users, Shield, ShieldCheck, RefreshCw, Mail, User } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -269,32 +269,39 @@ export default function AdminUsuariosPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <Badge className={
-                        usuario.rol === "admin" 
-                          ? "bg-[#7BB39C]/20 text-[#7BB39C] border-[#7BB39C]/30" 
-                          : "bg-[#e9e076]/30 text-[#655642]/70 border-[#e9e076]/50"
-                      }>
-                        {usuario.rol === "admin" ? "Admin" : "Cliente"}
+                    {usuario.email !== SUPER_ADMIN_EMAIL ? (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant={usuario.rol === "cliente" ? "default" : "outline"}
+                          onClick={() => usuario.rol !== "cliente" && toggleAdminRole(usuario.id, usuario.rol)}
+                          disabled={updating === usuario.id || usuario.rol === "cliente"}
+                          className={usuario.rol === "cliente" 
+                            ? "bg-[#e9e076] hover:bg-[#e9e076]/80 text-[#655642] border-[#e9e076]" 
+                            : "border-[#e9e076]/50 text-[#655642]/70 hover:bg-[#e9e076]/20"
+                          }
+                        >
+                          {updating === usuario.id && usuario.rol === "admin" ? "..." : "Cliente"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={usuario.rol === "admin" ? "default" : "outline"}
+                          onClick={() => usuario.rol !== "admin" && toggleAdminRole(usuario.id, usuario.rol)}
+                          disabled={updating === usuario.id || usuario.rol === "admin"}
+                          className={usuario.rol === "admin" 
+                            ? "bg-[#7BB39C] hover:bg-[#7BB39C]/80 text-white border-[#7BB39C]" 
+                            : "border-[#7BB39C]/50 text-[#655642]/70 hover:bg-[#7BB39C]/20"
+                          }
+                        >
+                          {updating === usuario.id && usuario.rol === "cliente" ? "..." : "Admin"}
+                        </Button>
+                      </div>
+                    ) : (
+                      <Badge className="bg-[#d38488]/20 text-[#d38488] border-[#d38488]/30">
+                        <Shield className="w-3 h-3 mr-1" />
+                        Super Admin
                       </Badge>
-                      {usuario.email !== SUPER_ADMIN_EMAIL && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-[#655642]/80">Admin</span>
-                          <Switch
-                            checked={usuario.rol === "admin"}
-                            onCheckedChange={() => toggleAdminRole(usuario.id, usuario.rol)}
-                            disabled={updating === usuario.id}
-                            className="data-[state=checked]:bg-[#7BB39C]"
-                          />
-                        </div>
-                      )}
-                      {usuario.email === SUPER_ADMIN_EMAIL && (
-                        <Badge className="bg-[#d38488]/20 text-[#d38488] border-[#d38488]/30">
-                          <Shield className="w-3 h-3 mr-1" />
-                          Super Admin
-                        </Badge>
-                      )}
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>
