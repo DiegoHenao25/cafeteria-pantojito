@@ -97,18 +97,24 @@ export default function AdminDashboard() {
       const url = editingProduct ? `/api/products/${editingProduct.id}` : "/api/products"
       const method = editingProduct ? "PUT" : "POST"
 
+      const bodyData = {
+        nombre: formData.nombre,
+        descripcion: formData.descripcion,
+        precio: formData.precio,
+        imagen: formData.imagen || editingProduct?.imagen || "",
+        categoryId: formData.categoryId,
+        disponible: true,
+      }
+
       const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          precio: Number.parseFloat(formData.precio),
-          categoryId: Number.parseInt(formData.categoryId),
-          disponible: true,
-        }),
+        body: JSON.stringify(bodyData),
       })
+
+      const responseData = await response.json()
 
       if (response.ok) {
         await loadData()
@@ -116,12 +122,11 @@ export default function AdminDashboard() {
         setShowAddProduct(false)
         setEditingProduct(null)
       } else {
-        const error = await response.json()
-        alert(error.error || "Error al guardar producto")
+        alert(responseData.error || "Error al guardar producto")
       }
     } catch (error) {
       console.error("Error guardando producto:", error)
-      alert("Error al guardar producto")
+      alert("Error de conexion al guardar producto")
     }
   }
 

@@ -2,10 +2,15 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { isAdmin } from "@/lib/auth"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request, 
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params
+    
     const product = await prisma.product.findUnique({
-      where: { id: Number.parseInt(params.id) },
+      where: { id: Number.parseInt(id) },
       include: { category: true },
     })
 
@@ -20,44 +25,78 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request, 
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const admin = await isAdmin()
     if (!admin) {
       return NextResponse.json({ error: "No autorizado" }, { status: 403 })
     }
 
-    const { nombre, descripcion, precio, imagen, categoryId, disponible } = await request.json()
+    const { id } = await params
+    const body = await request.json()
+    const { nombre, descripcion, precio, imagen, categoryId, disponible } = body
+
+    console.log("[v0] Actualizando producto:", id, body)
+
+    const updateData: any = {}
+    if (nombre !== undefined) updateData.nombre = nombre
+    if (descripcion !== undefined) updateData.descripcion = descripcion
+    if (precio !== undefined) updateData.precio = Number.parseFloat(precio)
+    if (imagen !== undefined) updateData.imagen = imagen
+    if (categoryId !== undefined) updateData.categoryId = Number.parseInt(categoryId)
+    if (disponible !== undefined) updateData.disponible = disponible
 
     const product = await prisma.product.update({
-      where: { id: Number.parseInt(params.id) },
-      data: {
-        nombre,
-        descripcion,
-        precio: precio ? Number.parseFloat(precio) : undefined,
-        imagen,
-        categoryId: categoryId ? Number.parseInt(categoryId) : undefined,
-        disponible,
-      },
+      where: { id: Number.parseInt(id) },
+      data: updateData,
       include: { category: true },
     })
 
+    console.log("[v0] Producto actualizado:", product)
     return NextResponse.json(product)
-  } catch (error) {
+  } catch (error: any) {
     console.error("[v0] Error actualizando producto:", error)
-    return NextResponse.json({ error: "Error al actualizar producto" }, { status: 500 })
+    const errorMessage = error?.message || "Error al actualizar producto"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request, 
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const admin = await isAdmin()
     if (!admin) {
       return NextResponse.json({ error: "No autorizado" }, { status: 403 })
     }
 
+    const { id } = await params
+
+    // Primero verificar si el producto tiene pedidos asociados
+    const productWithOrders = await prisma.product.findUnique({
+      where: { id: Number.parseInt(id) },
+      include: { orderItems: true }
+    })
+
+    if (productWithOrders && productWithOrders.orderItems.length > 0) {
+      // Si tiene pedidos, solo lo marcamos como no disponible
+      await prisma.product.update({
+        where: { id: Number.parseInt(id) },
+        data: { disponible: false }
+      })
+      return NextResponse.json({ 
+        success: true, 
+        message: "Producto deshabilitado (tiene pedidos asociados)" 
+      })
+    }
+
+    // Si no tiene pedidos, lo eliminamos
     await prisma.product.delete({
-      where: { id: Number.parseInt(params.id) },
+      where: { id: Number.parseInt(id) },
     })
 
     return NextResponse.json({ success: true })
