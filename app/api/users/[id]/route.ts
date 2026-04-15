@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const { rol } = await request.json()
-    const userId = Number.parseInt(params.id)
+    const userId = Number.parseInt(id)
 
     // Validar que el rol sea válido
     if (!["admin", "cliente"].includes(rol)) {

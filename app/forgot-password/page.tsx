@@ -49,32 +49,32 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-pink-200" />
+            <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-[#d38488]/30" />
           </div>
-          <h1 className="text-3xl font-bold text-amber-900">Pantojitos</h1>
-          <p className="text-pink-400 mt-2 font-medium">Dulce Tradicion</p>
-          <p className="text-amber-700 mt-1">Recupera tu contrasena</p>
+          <h1 className="text-3xl font-bold text-[#655642]">Pantojitos</h1>
+          <p className="text-[#d38488] mt-2 font-medium">Dulce Tradicion</p>
+          <p className="text-[#655642]/80 mt-1">Recupera tu contrasena</p>
         </div>
 
-        <Card className="shadow-lg border-pink-100">
+        <Card className="shadow-lg border-[#d38488]/20">
           <CardHeader>
-            <CardTitle className="text-amber-900">Olvidaste tu contrasena?</CardTitle>
-            <CardDescription className="text-amber-700">Ingresa tu correo electronico y te enviaremos un codigo de verificacion</CardDescription>
+            <CardTitle className="text-[#655642]">Olvidaste tu contrasena?</CardTitle>
+            <CardDescription className="text-[#655642]/80">Ingresa tu correo electronico y te enviaremos un codigo de verificacion</CardDescription>
           </CardHeader>
           <CardContent>
             {success ? (
               <div className="space-y-4">
-                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm flex items-start gap-2">
+                <div className="bg-[#7BB39C]/10 border border-[#7BB39C]/30 text-[#7BB39C] px-4 py-3 rounded-md text-sm flex items-start gap-2">
                   <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
                   <p>
                     Codigo enviado exitosamente a <strong>{email}</strong>. Revisa tu bandeja de entrada.
                   </p>
                 </div>
-                <p className="text-sm text-amber-700 text-center">Redirigiendo...</p>
+                <p className="text-sm text-[#655642]/80 text-center">Redirigiendo...</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
                 )}
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-amber-900">Correo electronico</Label>
+                  <Label htmlFor="email" className="text-[#655642]">Correo electronico</Label>
                   <Input
                     id="email"
                     type="email"
@@ -93,11 +93,11 @@ export default function ForgotPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="border-pink-200 focus:border-pink-400"
+                    className="border-[#d38488]/30 focus:border-[#d38488]"
                   />
                 </div>
 
-                <Button type="submit" className="w-full bg-pink-300 hover:bg-pink-400 text-amber-900" disabled={loading}>
+                <Button type="submit" className="w-full bg-[#d38488] hover:bg-[#d38488] text-[#655642]" disabled={loading}>
                   <Mail className="w-4 h-4 mr-2" />
                   {loading ? "Enviando codigo..." : "Enviar codigo de verificacion"}
                 </Button>
@@ -107,7 +107,7 @@ export default function ForgotPasswordPage() {
             <div className="mt-6 text-center">
               <Link
                 href="/login"
-                className="text-sm text-pink-400 hover:text-pink-500 font-medium inline-flex items-center gap-1"
+                className="text-sm text-[#d38488] hover:text-[#d38488] font-medium inline-flex items-center gap-1"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Volver al inicio de sesion

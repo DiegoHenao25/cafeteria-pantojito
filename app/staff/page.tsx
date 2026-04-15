@@ -42,7 +42,6 @@ export default function StaffPage() {
   useEffect(() => {
     checkAuth()
     fetchOrders()
-    // Actualizar cada 30 segundos
     const interval = setInterval(fetchOrders, 30000)
     return () => clearInterval(interval)
   }, [])
@@ -56,7 +55,6 @@ export default function StaffPage() {
         router.push("/")
       }
     } catch (error) {
-      console.error("[v0] Error verificando autenticación:", error)
       router.push("/")
     }
   }
@@ -67,7 +65,6 @@ export default function StaffPage() {
       await fetch("/api/auth/logout", { method: "POST" })
       window.location.href = "/login"
     } catch (error) {
-      console.error("[v0] Error en logout:", error)
       window.location.href = "/login"
     }
   }
@@ -80,7 +77,7 @@ export default function StaffPage() {
         setOrders(data)
       }
     } catch (error) {
-      console.error("[v0] Error obteniendo órdenes:", error)
+      console.error("Error obteniendo ordenes:", error)
     } finally {
       setLoading(false)
     }
@@ -98,7 +95,7 @@ export default function StaffPage() {
         fetchOrders()
       }
     } catch (error) {
-      console.error("[v0] Error actualizando orden:", error)
+      console.error("Error actualizando orden:", error)
     }
   }
 
@@ -111,28 +108,28 @@ export default function StaffPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#fdf6f6] to-[#d38488]/10 flex items-center justify-center">
         <div className="text-center">
-          <Coffee className="w-16 h-16 text-amber-600 animate-pulse mx-auto mb-4" />
-          <p className="text-gray-600">Cargando pedidos...</p>
+          <Coffee className="w-16 h-16 text-[#d38488] animate-pulse mx-auto mb-4" />
+          <p className="text-[#655642]/80">Cargando pedidos...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#fdf6f6] to-[#d38488]/10">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+      <header className="bg-white shadow-sm border-b border-[#d38488]/20 sticky top-0 z-10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-amber-600 p-2 rounded-lg">
+              <div className="bg-[#d38488] p-2 rounded-lg">
                 <Coffee className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Panel del Staff</h1>
-                <p className="text-sm text-gray-600">Gestión de Pedidos</p>
+                <h1 className="text-xl font-bold text-[#655642]">Panel del Staff</h1>
+                <p className="text-sm text-[#655642]/80">Gestion de Pedidos</p>
               </div>
             </div>
             <div className="hidden lg:flex items-center gap-4">
@@ -144,14 +141,14 @@ export default function StaffPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/admin")}
-                className="border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+                className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10 font-bold"
               >
-                Volver al Menú
+                Volver al Menu
               </Button>
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold bg-transparent"
+                className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10 font-bold bg-transparent"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Salir
@@ -166,7 +163,7 @@ export default function StaffPage() {
               <Button
                 variant="outline"
                 onClick={() => setShowMobileMenu(true)}
-                className="border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+                className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10 font-bold"
               >
                 <Menu className="w-5 h-5" />
               </Button>
@@ -178,7 +175,7 @@ export default function StaffPage() {
       <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
         <SheetContent side="right" className="w-[280px] bg-white">
           <SheetHeader>
-            <SheetTitle className="text-amber-900">Menú Staff</SheetTitle>
+            <SheetTitle className="text-[#655642]">Menu Staff</SheetTitle>
           </SheetHeader>
           <div className="mt-6 space-y-3">
             {pendingCount > 0 && (
@@ -192,9 +189,9 @@ export default function StaffPage() {
                 setShowMobileMenu(false)
                 router.push("/admin")
               }}
-              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+              className="w-full justify-start border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10 font-bold"
             >
-              Volver al Menú
+              Volver al Menu
             </Button>
             <Button
               variant="outline"
@@ -202,7 +199,7 @@ export default function StaffPage() {
                 setShowMobileMenu(false)
                 handleLogout()
               }}
-              className="w-full justify-start border-2 border-amber-700 text-amber-900 hover:bg-amber-50 font-bold"
+              className="w-full justify-start border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10 font-bold"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Salir
@@ -217,21 +214,21 @@ export default function StaffPage() {
           <Button
             variant={filter === "todos" ? "default" : "outline"}
             onClick={() => setFilter("todos")}
-            className={filter === "todos" ? "bg-amber-600 hover:bg-amber-700" : ""}
+            className={filter === "todos" ? "bg-[#d38488] hover:bg-[#d38488]/90" : "border-[#d38488] text-[#655642]"}
           >
             Todos ({orders.length})
           </Button>
           <Button
             variant={filter === "pendiente" ? "default" : "outline"}
             onClick={() => setFilter("pendiente")}
-            className={filter === "pendiente" ? "bg-amber-600 hover:bg-amber-700" : ""}
+            className={filter === "pendiente" ? "bg-[#e9e076] hover:bg-[#e9e076]/90 text-[#655642]" : "border-[#d38488] text-[#655642]"}
           >
             Pendientes ({orders.filter((o) => o.estado === "pendiente").length})
           </Button>
           <Button
             variant={filter === "completado" ? "default" : "outline"}
             onClick={() => setFilter("completado")}
-            className={filter === "completado" ? "bg-amber-600 hover:bg-amber-700" : ""}
+            className={filter === "completado" ? "bg-[#7BB39C] hover:bg-[#7BB39C]/90" : "border-[#d38488] text-[#655642]"}
           >
             Completados ({orders.filter((o) => o.estado === "completado").length})
           </Button>
@@ -239,30 +236,30 @@ export default function StaffPage() {
 
         {/* Orders Grid */}
         {filteredOrders.length === 0 ? (
-          <Card>
+          <Card className="border-[#d38488]/20">
             <CardContent className="py-12 text-center">
-              <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No hay pedidos {filter !== "todos" ? filter + "s" : ""}</p>
+              <Package className="w-16 h-16 text-[#655642]/40 mx-auto mb-4" />
+              <p className="text-[#655642]/80">No hay pedidos {filter !== "todos" ? filter + "s" : ""}</p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid gap-6">
             {filteredOrders.map((order) => (
-              <Card key={order.id} className={order.estado === "pendiente" ? "border-amber-500 border-2" : ""}>
+              <Card key={order.id} className={order.estado === "pendiente" ? "border-[#e9e076] border-2" : "border-[#d38488]/20"}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-2 text-[#655642]">
                         Pedido #{order.id}
                         {order.estado === "pendiente" ? (
-                          <Badge variant="destructive">Pendiente</Badge>
+                          <Badge className="bg-[#e9e076] text-[#655642]">Pendiente</Badge>
                         ) : (
-                          <Badge variant="default" className="bg-green-600">
+                          <Badge className="bg-[#7BB39C]">
                             Completado
                           </Badge>
                         )}
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-[#655642]/80">
                         {new Date(order.createdAt).toLocaleString("es-CO", {
                           dateStyle: "medium",
                           timeStyle: "short",
@@ -270,8 +267,8 @@ export default function StaffPage() {
                       </CardDescription>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-green-600">${order.total.toLocaleString()}</div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                      <div className="text-2xl font-bold text-[#7BB39C]">${order.total.toLocaleString()}</div>
+                      <div className="flex items-center gap-2 text-sm text-[#655642]/80 mt-1">
                         <Clock className="w-4 h-4" />
                         {order.tiempoRecogida} min
                       </div>
@@ -282,43 +279,43 @@ export default function StaffPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     {/* Customer Info */}
                     <div className="space-y-3">
-                      <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <h3 className="font-semibold text-[#655642] flex items-center gap-2">
                         <User className="w-4 h-4" />
-                        Información del Cliente
+                        Informacion del Cliente
                       </h3>
                       <div className="space-y-2 text-sm">
                         <div>
-                          <span className="text-gray-600">Nombre:</span>
-                          <span className="ml-2 font-medium">{order.clienteNombre}</span>
+                          <span className="text-[#655642]/80">Nombre:</span>
+                          <span className="ml-2 font-medium text-[#655642]">{order.clienteNombre}</span>
                         </div>
                         <div>
-                          <span className="text-gray-600">Cédula:</span>
-                          <span className="ml-2 font-medium">{order.clienteCedula}</span>
+                          <span className="text-[#655642]/80">Cedula:</span>
+                          <span className="ml-2 font-medium text-[#655642]">{order.clienteCedula}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-gray-600" />
-                          <span className="font-medium">{order.clienteTelefono}</span>
+                          <Phone className="w-4 h-4 text-[#655642]/80" />
+                          <span className="font-medium text-[#655642]">{order.clienteTelefono}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-gray-600" />
-                          <span className="font-medium text-xs">{order.clienteCorreo}</span>
+                          <Mail className="w-4 h-4 text-[#655642]/80" />
+                          <span className="font-medium text-xs text-[#655642]">{order.clienteCorreo}</span>
                         </div>
                         <div className="flex items-center gap-2 pt-2">
-                          <CreditCard className="w-4 h-4 text-gray-600" />
-                          <Badge variant="outline">{order.metodoPago}</Badge>
+                          <CreditCard className="w-4 h-4 text-[#655642]/80" />
+                          <Badge variant="outline" className="border-[#d38488] text-[#655642]">{order.metodoPago}</Badge>
                         </div>
                       </div>
                     </div>
 
                     {/* Order Items */}
                     <div className="space-y-3">
-                      <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <h3 className="font-semibold text-[#655642] flex items-center gap-2">
                         <Package className="w-4 h-4" />
                         Productos
                       </h3>
                       <div className="space-y-2">
                         {order.orderItems.map((item) => (
-                          <div key={item.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                          <div key={item.id} className="flex items-center gap-3 p-2 bg-[#d38488]/10 rounded-lg">
                             <img
                               src={
                                 item.product.imagen ||
@@ -328,12 +325,12 @@ export default function StaffPage() {
                               className="w-10 h-10 object-cover rounded"
                             />
                             <div className="flex-1">
-                              <p className="font-medium text-sm">{item.product.nombre}</p>
-                              <p className="text-xs text-gray-600">
+                              <p className="font-medium text-sm text-[#655642]">{item.product.nombre}</p>
+                              <p className="text-xs text-[#655642]/80">
                                 ${Number(item.precio).toLocaleString()} x {item.cantidad}
                               </p>
                             </div>
-                            <div className="font-semibold text-sm">
+                            <div className="font-semibold text-sm text-[#655642]">
                               ${(Number(item.precio) * item.cantidad).toLocaleString()}
                             </div>
                           </div>
@@ -344,10 +341,10 @@ export default function StaffPage() {
 
                   {/* Actions */}
                   {order.estado === "pendiente" && (
-                    <div className="flex gap-3 mt-6 pt-6 border-t">
+                    <div className="flex gap-3 mt-6 pt-6 border-t border-[#d38488]/20">
                       <Button
                         onClick={() => updateOrderStatus(order.id, "completado")}
-                        className="flex-1 bg-green-600 hover:bg-green-700"
+                        className="flex-1 bg-[#7BB39C] hover:bg-[#7BB39C]/90"
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Marcar como Completado

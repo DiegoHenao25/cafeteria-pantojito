@@ -37,10 +37,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading || !user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-white">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-pink-300 border-t-pink-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-amber-700">Cargando...</p>
+          <div className="w-16 h-16 border-4 border-[#d38488] border-t-[#d38488] rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#655642]/80">Cargando...</p>
         </div>
       </div>
     )

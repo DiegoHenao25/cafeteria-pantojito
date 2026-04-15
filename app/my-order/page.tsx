@@ -82,27 +82,27 @@ export default function MyOrderPage() {
     switch (estado) {
       case "pendiente":
         return {
-          color: "bg-pink-400",
-          textColor: "text-pink-500",
-          bgColor: "bg-pink-50",
+          color: "bg-[#d38488]",
+          textColor: "text-[#d38488]",
+          bgColor: "bg-[#d38488]/10",
           title: "Preparando tu pedido",
           description: "Nuestro equipo esta trabajando en tu orden",
           badge: "En preparacion",
         }
       case "listo":
         return {
-          color: "bg-green-500",
-          textColor: "text-green-600",
-          bgColor: "bg-green-50",
+          color: "bg-[#7BB39C]",
+          textColor: "text-[#7BB39C]",
+          bgColor: "bg-[#7BB39C]/10",
           title: "Tu pedido esta listo!",
           description: "Puedes pasar a recogerlo en la cafeteria",
           badge: "Listo para recoger",
         }
-      case "completado":
+case "completado":
         return {
-          color: "bg-amber-600",
-          textColor: "text-amber-700",
-          bgColor: "bg-amber-50",
+          color: "bg-[#7BB39C]",
+          textColor: "text-[#7BB39C]",
+          bgColor: "bg-[#7BB39C]/10",
           title: "Pedido completado",
           description: "Gracias por tu compra. Disfruta tu pedido!",
           badge: "Completado",
@@ -130,10 +130,10 @@ export default function MyOrderPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-white">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white">
         <div className="text-center">
-          <Coffee className="w-16 h-16 animate-pulse mx-auto mb-4 text-pink-400" />
-          <p className="text-lg text-amber-700">Cargando tu pedido...</p>
+          <Coffee className="w-16 h-16 animate-pulse mx-auto mb-4 text-[#d38488]" />
+          <p className="text-lg text-[#655642]/80">Cargando tu pedido...</p>
         </div>
       </div>
     )
@@ -141,14 +141,14 @@ export default function MyOrderPage() {
 
   if (!order) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-white">
-        <Card className="max-w-md mx-4 border-2 border-pink-200">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white">
+        <Card className="max-w-md mx-4 border-2 border-[#d38488]/30">
           <CardContent className="p-8 text-center">
-            <Package className="w-16 h-16 mx-auto mb-4 text-pink-300" />
-            <p className="text-lg mb-4 text-amber-900">No se encontro el pedido</p>
+            <Package className="w-16 h-16 mx-auto mb-4 text-[#d38488]" />
+            <p className="text-lg mb-4 text-[#655642]">No se encontro el pedido</p>
             <Button 
               onClick={() => router.push("/pedidos")}
-              className="bg-pink-400 hover:bg-pink-500 text-white"
+              className="bg-[#d38488] hover:bg-[#d38488] text-white"
             >
               Ver mis pedidos
             </Button>
@@ -162,19 +162,19 @@ export default function MyOrderPage() {
   const timeline = getOrderTimeline(order.estado)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white py-8">
       <div className="container mx-auto px-4 max-w-4xl">
         <Button 
           variant="outline" 
           onClick={() => router.push("/pedidos")} 
-          className="mb-6 border-2 border-pink-300 text-amber-900 hover:bg-pink-50"
+          className="mb-6 border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Ver mis pedidos
         </Button>
 
-        <Card className="border-2 border-pink-200 mb-6">
-          <CardHeader className={`text-center border-b border-pink-200 ${statusInfo.bgColor}`}>
+        <Card className="border-2 border-[#d38488]/30 mb-6">
+          <CardHeader className={`text-center border-b border-[#d38488]/30 ${statusInfo.bgColor}`}>
             <div className="flex justify-center mb-4">
               <div className={`${statusInfo.color} p-4 rounded-full`}>
                 {order.estado === "pendiente" && <Clock className="w-12 h-12 text-white" />}
@@ -184,16 +184,16 @@ export default function MyOrderPage() {
               </div>
             </div>
             <CardTitle className={`text-2xl mb-2 ${statusInfo.textColor}`}>{statusInfo.title}</CardTitle>
-            <p className="text-amber-700 mb-4">{statusInfo.description}</p>
+            <p className="text-[#655642]/80 mb-4">{statusInfo.description}</p>
             <Badge className={`${statusInfo.color} text-white text-lg px-6 py-2`}>{statusInfo.badge}</Badge>
           </CardHeader>
 
           <CardContent className="p-6">
             {order.estado !== "cancelado" && (
               <div className="mb-8">
-                <h3 className="font-semibold text-lg mb-6 text-center text-amber-900">Progreso del pedido</h3>
+                <h3 className="font-semibold text-lg mb-6 text-center text-[#655642]">Progreso del pedido</h3>
                 <div className="flex items-center justify-between relative">
-                  <div className="absolute top-6 left-0 right-0 h-1 bg-pink-100 -z-10">
+                  <div className="absolute top-6 left-0 right-0 h-1 bg-[#d38488]/20 -z-10">
                     <div
                       className={`h-full ${statusInfo.color} transition-all duration-500`}
                       style={{
@@ -215,13 +215,13 @@ export default function MyOrderPage() {
                       <div key={step.id} className="flex flex-col items-center flex-1">
                         <div
                           className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
-                            step.completed ? statusInfo.color : "bg-pink-100"
-                          } ${step.active ? "ring-4 ring-pink-200 scale-110" : ""}`}
+                            step.completed ? statusInfo.color : "bg-[#d38488]/20"
+                          } ${step.active ? "ring-4 ring-[#d38488]/30 scale-110" : ""}`}
                         >
-                          <Icon className={`w-6 h-6 ${step.completed ? "text-white" : "text-pink-300"}`} />
+                          <Icon className={`w-6 h-6 ${step.completed ? "text-white" : "text-[#d38488]"}`} />
                         </div>
                         <p
-                          className={`text-xs text-center font-medium ${step.completed ? statusInfo.textColor : "text-pink-300"}`}
+                          className={`text-xs text-center font-medium ${step.completed ? statusInfo.textColor : "text-[#d38488]"}`}
                         >
                           {step.label}
                         </p>
@@ -233,19 +233,19 @@ export default function MyOrderPage() {
             )}
 
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-pink-50 p-4 rounded-lg border border-pink-200">
-                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-amber-900">
-                  <Package className="w-5 h-5 text-pink-400" />
+              <div className="bg-[#d38488]/10 p-4 rounded-lg border border-[#d38488]/30">
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-[#655642]">
+                  <Package className="w-5 h-5 text-[#d38488]" />
                   Detalles del pedido
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-amber-700">Numero:</span>
-                    <span className="font-bold text-amber-900">#{order.id}</span>
+                    <span className="text-[#655642]/80">Numero:</span>
+                    <span className="font-bold text-[#655642]">#{order.id}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-amber-700">Fecha:</span>
-                    <span className="font-medium text-amber-900">
+                    <span className="text-[#655642]/80">Fecha:</span>
+                    <span className="font-medium text-[#655642]">
                       {new Date(order.createdAt).toLocaleString("es-CO", {
                         dateStyle: "short",
                         timeStyle: "short",
@@ -253,68 +253,68 @@ export default function MyOrderPage() {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-amber-700">Tiempo estimado:</span>
-                    <span className="font-medium text-pink-500">{order.tiempoRecogida} minutos</span>
+                    <span className="text-[#655642]/80">Tiempo estimado:</span>
+                    <span className="font-medium text-[#d38488]">{order.tiempoRecogida} minutos</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-pink-50 p-4 rounded-lg border border-pink-200">
-                <h3 className="font-semibold text-lg mb-3 text-amber-900">Tu informacion</h3>
+              <div className="bg-[#d38488]/10 p-4 rounded-lg border border-[#d38488]/30">
+                <h3 className="font-semibold text-lg mb-3 text-[#655642]">Tu informacion</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <Package className="w-4 h-4 text-pink-400" />
-                    <span className="font-medium text-amber-900">{order.clienteNombre}</span>
+                    <Package className="w-4 h-4 text-[#d38488]" />
+                    <span className="font-medium text-[#655642]">{order.clienteNombre}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-pink-400" />
-                    <span className="font-medium text-amber-900">{order.clienteTelefono}</span>
+                    <Phone className="w-4 h-4 text-[#d38488]" />
+                    <span className="font-medium text-[#655642]">{order.clienteTelefono}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-pink-400" />
-                    <span className="font-medium text-xs text-amber-900">{order.clienteCorreo}</span>
+                    <Mail className="w-4 h-4 text-[#d38488]" />
+                    <span className="font-medium text-xs text-[#655642]">{order.clienteCorreo}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="mb-6">
-              <h3 className="font-semibold text-lg mb-3 text-amber-900">Productos</h3>
+              <h3 className="font-semibold text-lg mb-3 text-[#655642]">Productos</h3>
               <div className="space-y-3">
                 {order.orderItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-3 p-3 bg-white rounded-lg border-2 border-pink-100"
+                    className="flex items-center gap-3 p-3 bg-white rounded-lg border-2 border-[#d38488]/20"
                   >
                     {item.product.imagen && (
                       <img
                         src={item.product.imagen || "/placeholder.svg"}
                         alt={item.product.nombre}
-                        className="w-16 h-16 object-cover rounded border border-pink-200"
+                        className="w-16 h-16 object-cover rounded border border-[#d38488]/30"
                       />
                     )}
                     <div className="flex-1">
-                      <p className="font-semibold text-amber-900">{item.product.nombre}</p>
-                      <p className="text-sm text-amber-700">
+                      <p className="font-semibold text-[#655642]">{item.product.nombre}</p>
+                      <p className="text-sm text-[#655642]/80">
                         ${Number(item.precio).toLocaleString()} x {item.cantidad}
                       </p>
                     </div>
-                    <p className="font-bold text-lg text-pink-500">${(Number(item.precio) * item.cantidad).toLocaleString()}</p>
+                    <p className="font-bold text-lg text-[#d38488]">${(Number(item.precio) * item.cantidad).toLocaleString()}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="border-t-2 border-pink-200 pt-4">
+            <div className="border-t-2 border-[#d38488]/30 pt-4">
               <div className="flex justify-between items-center">
-                <span className="text-xl font-bold text-amber-900">Total:</span>
-                <span className="text-2xl font-bold text-pink-500">${Number(order.total).toLocaleString()}</span>
+                <span className="text-xl font-bold text-[#655642]">Total:</span>
+                <span className="text-2xl font-bold text-[#d38488]">${Number(order.total).toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="text-center text-sm text-amber-700 border-t border-pink-200 mt-6 pt-4">
+            <div className="text-center text-sm text-[#655642]/80 border-t border-[#d38488]/30 mt-6 pt-4">
               <div className="flex items-center justify-center gap-2">
-                <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-[#d38488] rounded-full animate-pulse" />
                 <p>Actualizando automaticamente cada 5 segundos</p>
               </div>
             </div>

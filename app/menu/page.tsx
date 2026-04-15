@@ -189,37 +189,42 @@ export default function MenuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-pink-100 sticky top-0 z-40">
+      <header className="bg-white shadow-sm border-b border-[#d38488]/20 sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowMobileMenu(true)}
-                className="lg:hidden bg-pink-300 p-2 rounded-lg hover:bg-pink-400 transition-colors"
+                className="lg:hidden bg-[#d38488] p-2 rounded-lg hover:bg-[#d38488] transition-colors"
               >
-                <Menu className="w-6 h-6 text-amber-900" />
+                <Menu className="w-6 h-6 text-[#655642]" />
               </button>
               <img src="/logo.jpeg" alt="Pantojitos" className="w-10 h-10 rounded-full object-cover hidden lg:block" />
               <div>
-                <h1 className="text-xl font-bold text-amber-900">Pantojitos</h1>
-                <p className="text-sm text-pink-400">Dulce Tradicion</p>
+                <h1 className="text-xl font-bold text-[#655642]">Pantojitos</h1>
+                <p className="text-sm text-[#d38488]">Dulce Tradicion</p>
               </div>
             </div>
             <div className="hidden lg:flex items-center gap-4">
               {user && (
-                <div className="flex items-center gap-2 text-sm text-amber-800">
-                  <User className="w-4 h-4" />
+                <button
+                  onClick={() => router.push("/perfil")}
+                  className="flex items-center gap-2 text-sm text-[#655642] hover:bg-[#d38488]/10 px-3 py-2 rounded-lg transition-colors"
+                >
+                  <div className="w-8 h-8 bg-[#d38488]/20 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-[#d38488]" />
+                  </div>
                   <span>{user.nombre}</span>
-                  {user.rol === "admin" && <Badge className="bg-pink-300 text-amber-900">Admin</Badge>}
-                </div>
+                  {user.rol === "admin" && <Badge className="bg-[#d38488] text-[#655642]">Admin</Badge>}
+                </button>
               )}
               {user?.rol === "admin" && (
                 <Button
                   variant="outline"
                   onClick={() => router.push("/admin")}
-                  className="border-2 border-pink-300 text-pink-700 hover:bg-pink-50 font-bold"
+                  className="border-2 border-[#d38488] text-[#d38488] hover:bg-[#d38488]/10 font-bold"
                 >
                   <Settings className="w-4 h-4 mr-2" />
                   Panel Admin
@@ -228,7 +233,7 @@ export default function MenuPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/pedidos")}
-                className="border-2 border-amber-300 text-amber-800 hover:bg-amber-50 font-bold"
+                className="border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20 font-bold"
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Mis Pedidos
@@ -236,12 +241,12 @@ export default function MenuPage() {
               <Button
                 variant="outline"
                 onClick={() => setShowCart(true)}
-                className="relative border-2 border-pink-300 text-pink-700 hover:bg-pink-50 font-bold"
+                className="relative border-2 border-[#d38488] text-[#d38488] hover:bg-[#d38488]/10 font-bold"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Carrito
                 {getCartItemCount() > 0 && (
-                  <Badge className="absolute -top-2 -right-2 px-2 py-1 text-xs bg-pink-300 text-amber-900">
+                  <Badge className="absolute -top-2 -right-2 px-2 py-1 text-xs bg-[#d38488] text-[#655642]">
                     {getCartItemCount()}
                   </Badge>
                 )}
@@ -249,7 +254,7 @@ export default function MenuPage() {
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="border-2 border-amber-300 text-amber-800 hover:bg-amber-50 font-bold bg-transparent"
+                className="border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20 font-bold bg-transparent"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Salir
@@ -258,10 +263,10 @@ export default function MenuPage() {
             <Button
               variant="outline"
               onClick={() => setShowCart(true)}
-              className="lg:hidden relative border-2 border-pink-300 text-pink-700 hover:bg-pink-50 font-bold"
+              className="lg:hidden relative border-2 border-[#d38488] text-[#d38488] hover:bg-[#d38488]/10 font-bold"
             >
               <ShoppingCart className="w-4 h-4" />
-              {getCartItemCount() > 0 && <Badge className="ml-auto bg-pink-300 text-amber-900">{getCartItemCount()}</Badge>}
+              {getCartItemCount() > 0 && <Badge className="ml-auto bg-[#d38488] text-[#655642]">{getCartItemCount()}</Badge>}
             </Button>
           </div>
         </div>
@@ -270,18 +275,18 @@ export default function MenuPage() {
       <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
         <SheetContent side="left" className="w-[280px] bg-white">
           <SheetHeader>
-            <SheetTitle className="flex items-center gap-2 text-amber-900">
+            <SheetTitle className="flex items-center gap-2 text-[#655642]">
               <img src="/logo.jpeg" alt="Pantojitos" className="w-8 h-8 rounded-full" />
               Pantojitos
             </SheetTitle>
           </SheetHeader>
           <div className="mt-6 space-y-3">
             {user && (
-              <div className="flex items-center gap-2 p-3 bg-pink-50 rounded-lg">
-                <User className="w-5 h-5 text-pink-700" />
+              <div className="flex items-center gap-2 p-3 bg-[#d38488]/10 rounded-lg">
+                <User className="w-5 h-5 text-[#d38488]" />
                 <div>
-                  <p className="font-semibold text-amber-900">{user.nombre}</p>
-                  {user.rol === "admin" && <Badge className="bg-pink-300 text-amber-900 text-xs">Admin</Badge>}
+                  <p className="font-semibold text-[#655642]">{user.nombre}</p>
+                  {user.rol === "admin" && <Badge className="bg-[#d38488] text-[#655642] text-xs">Admin</Badge>}
                 </div>
               </div>
             )}
@@ -292,7 +297,7 @@ export default function MenuPage() {
                   setShowMobileMenu(false)
                   router.push("/admin")
                 }}
-                className="w-full justify-start border-2 border-pink-300 text-pink-700 hover:bg-pink-50 font-bold"
+                className="w-full justify-start border-2 border-[#d38488] text-[#d38488] hover:bg-[#d38488]/10 font-bold"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Panel Admin
@@ -302,9 +307,20 @@ export default function MenuPage() {
               variant="outline"
               onClick={() => {
                 setShowMobileMenu(false)
+                router.push("/perfil")
+              }}
+              className="w-full justify-start border-2 border-[#d38488]/50 text-[#655642] hover:bg-[#d38488]/10 font-bold"
+            >
+              <User className="w-4 h-4 mr-2" />
+              Mi Perfil
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileMenu(false)
                 router.push("/pedidos")
               }}
-              className="w-full justify-start border-2 border-amber-300 text-amber-800 hover:bg-amber-50 font-bold"
+              className="w-full justify-start border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20 font-bold"
             >
               <FileText className="w-4 h-4 mr-2" />
               Mis Pedidos
@@ -315,11 +331,11 @@ export default function MenuPage() {
                 setShowMobileMenu(false)
                 setShowCart(true)
               }}
-              className="w-full justify-start border-2 border-pink-300 text-pink-700 hover:bg-pink-50 font-bold"
+              className="w-full justify-start border-2 border-[#d38488] text-[#d38488] hover:bg-[#d38488]/10 font-bold"
             >
               <ShoppingCart className="w-4 h-4 mr-2" />
               Carrito
-              {getCartItemCount() > 0 && <Badge className="ml-auto bg-pink-300 text-amber-900">{getCartItemCount()}</Badge>}
+              {getCartItemCount() > 0 && <Badge className="ml-auto bg-[#d38488] text-[#655642]">{getCartItemCount()}</Badge>}
             </Button>
             <Button
               variant="outline"
@@ -327,7 +343,7 @@ export default function MenuPage() {
                 setShowMobileMenu(false)
                 handleLogout()
               }}
-              className="w-full justify-start border-2 border-amber-300 text-amber-800 hover:bg-amber-50 font-bold"
+              className="w-full justify-start border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20 font-bold"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Salir
@@ -339,19 +355,19 @@ export default function MenuPage() {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
         <div className="mb-6">
-          <h2 className="text-3xl font-bold text-amber-900 mb-2">Nuestro Menu</h2>
-          <p className="text-pink-400">Descubre nuestros deliciosos productos frescos</p>
+          <h2 className="text-3xl font-bold text-[#655642] mb-2">Nuestro Menu</h2>
+          <p className="text-[#d38488]">Descubre nuestros deliciosos productos frescos</p>
         </div>
 
         <div className="mb-6">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#d38488] w-5 h-5" />
             <Input
               type="text"
               placeholder="Buscar productos... (ej: limon)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full border-2 border-pink-200 focus:border-pink-400 rounded-lg"
+              className="pl-10 pr-4 py-2 w-full border-2 border-[#d38488]/30 focus:border-[#d38488] rounded-lg"
             />
           </div>
         </div>
@@ -407,20 +423,20 @@ export default function MenuPage() {
                         target.src = `/placeholder.svg?height=128&width=200&query=${encodeURIComponent(product.nombre)}`
                       }}
                     />
-                    <Badge className="absolute top-1.5 right-1.5 bg-pink-300 text-amber-900 text-[10px] px-1.5 py-0.5">
+                    <Badge className="absolute top-1.5 right-1.5 bg-[#d38488] text-[#655642] text-[10px] px-1.5 py-0.5">
                       {product.category.nombre}
                     </Badge>
                   </div>
                   <div className="p-1.5 space-y-0.5">
                     <h3 className="font-semibold text-xs line-clamp-2 leading-tight">{product.nombre}</h3>
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-sm font-bold text-green-600 whitespace-nowrap">
+                      <span className="text-sm font-bold text-[#7BB39C] whitespace-nowrap">
                         ${Number(product.precio).toLocaleString()}
                       </span>
                       <Button
                         onClick={() => addToCart(product)}
                         size="sm"
-                        className="bg-pink-300 hover:bg-pink-400 text-amber-900 h-7 px-2 text-[10px]"
+                        className="bg-[#d38488] hover:bg-[#d38488] text-[#655642] h-7 px-2 text-[10px]"
                       >
                         <Plus className="w-3 h-3" />
                       </Button>
@@ -435,13 +451,13 @@ export default function MenuPage() {
 
       {/* Cart Modal */}
       <Dialog open={showCart} onOpenChange={setShowCart}>
-        <DialogContent className="max-w-2xl max-h-[90vh] bg-gradient-to-b from-pink-50 to-white border-2 border-pink-200">
-          <DialogHeader className="border-b border-pink-200 pb-4">
-            <DialogTitle className="text-2xl font-bold text-amber-900 flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6 text-pink-400" />
+        <DialogContent className="max-w-2xl max-h-[90vh] bg-gradient-to-b from-[#fdf6f6] to-white border-2 border-[#d38488]/30">
+          <DialogHeader className="border-b border-[#d38488]/30 pb-4">
+            <DialogTitle className="text-2xl font-bold text-[#655642] flex items-center gap-2">
+              <ShoppingCart className="w-6 h-6 text-[#d38488]" />
               Carrito de Compras
             </DialogTitle>
-            <DialogDescription className="text-pink-400">
+            <DialogDescription className="text-[#d38488]">
               Revisa tu pedido antes de continuar al pago
             </DialogDescription>
           </DialogHeader>
@@ -449,9 +465,9 @@ export default function MenuPage() {
           <div className="space-y-4 pt-4">
             {cart.length === 0 ? (
               <div className="text-center py-12">
-                <ShoppingCart className="w-16 h-16 mx-auto text-pink-300 mb-4" />
-                <p className="text-amber-900 text-lg">Tu carrito esta vacio</p>
-                <p className="text-pink-400 text-sm mt-2">Agrega productos para comenzar tu pedido</p>
+                <ShoppingCart className="w-16 h-16 mx-auto text-[#d38488] mb-4" />
+                <p className="text-[#655642] text-lg">Tu carrito esta vacio</p>
+                <p className="text-[#d38488] text-sm mt-2">Agrega productos para comenzar tu pedido</p>
               </div>
             ) : (
               <>
@@ -459,7 +475,7 @@ export default function MenuPage() {
                   {cart.map((item) => (
                     <div
                       key={item.product.id}
-                      className="flex items-center gap-4 p-4 bg-white rounded-lg border border-pink-200 shadow-sm"
+                      className="flex items-center gap-4 p-4 bg-white rounded-lg border border-[#d38488]/30 shadow-sm"
                     >
                       <img
                         src={
@@ -467,50 +483,50 @@ export default function MenuPage() {
                           `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(item.product.nombre) || "/placeholder.svg"}`
                         }
                         alt={item.product.nombre}
-                        className="w-20 h-20 object-cover rounded-md border border-pink-200"
+                        className="w-20 h-20 object-cover rounded-md border border-[#d38488]/30"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
                           target.src = `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(item.product.nombre)}`
                         }}
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-amber-900 truncate">{item.product.nombre}</h4>
-                        <p className="text-sm text-amber-700">${Number(item.product.precio).toLocaleString()} c/u</p>
+                        <h4 className="font-semibold text-[#655642] truncate">{item.product.nombre}</h4>
+                        <p className="text-sm text-[#655642]/80">${Number(item.product.precio).toLocaleString()} c/u</p>
                       </div>
-                      <div className="flex items-center gap-2 bg-pink-50 rounded-lg p-1 border border-pink-200">
+                      <div className="flex items-center gap-2 bg-[#d38488]/10 rounded-lg p-1 border border-[#d38488]/30">
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => removeFromCart(item.product.id)}
-                          className="h-8 w-8 p-0 hover:bg-pink-100"
+                          className="h-8 w-8 p-0 hover:bg-[#d38488]/20"
                         >
-                          <Minus className="w-4 h-4 text-amber-900" />
+                          <Minus className="w-4 h-4 text-[#655642]" />
                         </Button>
-                        <span className="w-8 text-center font-semibold text-amber-900">{item.cantidad}</span>
+                        <span className="w-8 text-center font-semibold text-[#655642]">{item.cantidad}</span>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => addToCart(item.product)}
-                          className="h-8 w-8 p-0 hover:bg-pink-100"
+                          className="h-8 w-8 p-0 hover:bg-[#d38488]/20"
                         >
-                          <Plus className="w-4 h-4 text-amber-900" />
+                          <Plus className="w-4 h-4 text-[#655642]" />
                         </Button>
                       </div>
-                      <div className="font-bold text-green-700 whitespace-nowrap text-lg">
+                      <div className="font-bold text-[#7BB39C] whitespace-nowrap text-lg">
                         ${(Number(item.product.precio) * item.cantidad).toLocaleString()}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="border-t-2 border-pink-200 pt-4 bg-pink-50 -mx-6 px-6 py-4 rounded-lg">
+                <div className="border-t-2 border-[#d38488]/30 pt-4 bg-[#d38488]/10 -mx-6 px-6 py-4 rounded-lg">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-amber-900 font-medium">Subtotal:</span>
-                    <span className="text-amber-900 font-semibold text-lg">${getCartTotal().toLocaleString()}</span>
+                    <span className="text-[#655642] font-medium">Subtotal:</span>
+                    <span className="text-[#655642] font-semibold text-lg">${getCartTotal().toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xl font-bold border-t border-pink-200 pt-2 mt-2">
-                    <span className="text-amber-900">Total:</span>
-                    <span className="text-pink-500">${getCartTotal().toLocaleString()}</span>
+                  <div className="flex justify-between items-center text-xl font-bold border-t border-[#d38488]/30 pt-2 mt-2">
+                    <span className="text-[#655642]">Total:</span>
+                    <span className="text-[#d38488]/100">${getCartTotal().toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -518,7 +534,7 @@ export default function MenuPage() {
                   <Button
                     variant="outline"
                     onClick={() => setShowCart(false)}
-                    className="flex-1 border-2 border-pink-300 text-amber-900 hover:bg-pink-50 font-semibold"
+                    className="flex-1 border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10 font-semibold"
                   >
                     Seguir Comprando
                   </Button>
@@ -528,7 +544,7 @@ export default function MenuPage() {
                       setShowCart(false)
                       router.push("/checkout")
                     }}
-                    className="flex-1 bg-pink-400 hover:bg-pink-500 text-white font-semibold"
+                    className="flex-1 bg-[#d38488] hover:bg-[#d38488]/100 text-white font-semibold"
                   >
                     Ir a Pagar
                   </Button>

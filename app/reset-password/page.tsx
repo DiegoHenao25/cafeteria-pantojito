@@ -83,28 +83,28 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white flex items-center justify-center p-4">
       {/* Modal de exito */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className="sm:max-w-md bg-white border-2 border-pink-200">
+        <DialogContent className="sm:max-w-md bg-white border-2 border-[#d38488]/30">
           <div className="flex flex-col items-center justify-center py-6 space-y-4">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-12 h-12 text-green-500" />
+            <div className="w-20 h-20 bg-[#7BB39C]/20 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-12 h-12 text-[#7BB39C]" />
             </div>
             <div className="flex items-center gap-2">
-              <PartyPopper className="w-6 h-6 text-pink-400" />
-              <h2 className="text-2xl font-bold text-amber-900">Cambio Exitoso</h2>
-              <PartyPopper className="w-6 h-6 text-pink-400" />
+              <PartyPopper className="w-6 h-6 text-[#d38488]" />
+              <h2 className="text-2xl font-bold text-[#655642]">Cambio Exitoso</h2>
+              <PartyPopper className="w-6 h-6 text-[#d38488]" />
             </div>
-            <p className="text-center text-amber-700">
+            <p className="text-center text-[#655642]/80">
               Tu contrasena ha sido actualizada correctamente. Ya puedes iniciar sesion con tu nueva contrasena.
             </p>
             <div className="flex justify-center mb-4">
-              <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-16 h-16 rounded-full object-cover shadow-lg border-4 border-pink-200" />
+              <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-16 h-16 rounded-full object-cover shadow-lg border-4 border-[#d38488]/30" />
             </div>
             <Button 
               onClick={handleGoToLogin}
-              className="w-full bg-pink-300 hover:bg-pink-400 text-amber-900 font-semibold"
+              className="w-full bg-[#d38488] hover:bg-[#d38488] text-[#655642] font-semibold"
             >
               Ir a Iniciar Sesion
             </Button>
@@ -115,17 +115,17 @@ function ResetPasswordForm() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-pink-200" />
+            <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-[#d38488]/30" />
           </div>
-          <h1 className="text-3xl font-bold text-amber-900">Pantojitos</h1>
-          <p className="text-pink-400 mt-2 font-medium">Dulce Tradicion</p>
-          <p className="text-amber-700 mt-1">Restablece tu contrasena</p>
+          <h1 className="text-3xl font-bold text-[#655642]">Pantojitos</h1>
+          <p className="text-[#d38488] mt-2 font-medium">Dulce Tradicion</p>
+          <p className="text-[#655642]/80 mt-1">Restablece tu contrasena</p>
         </div>
 
-        <Card className="shadow-lg border-pink-100">
+        <Card className="shadow-lg border-[#d38488]/20">
           <CardHeader>
-            <CardTitle className="text-amber-900">Nueva contrasena</CardTitle>
-            <CardDescription className="text-amber-700">Ingresa el codigo que recibiste y tu nueva contrasena</CardDescription>
+            <CardTitle className="text-[#655642]">Nueva contrasena</CardTitle>
+            <CardDescription className="text-[#655642]/80">Ingresa el codigo que recibiste y tu nueva contrasena</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,14 +133,14 @@ function ResetPasswordForm() {
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">{error}</div>
               )}
 
-              <div className="bg-pink-50 border border-pink-200 text-pink-700 px-4 py-3 rounded-md text-sm">
+              <div className="bg-[#d38488]/10 border border-[#d38488]/30 text-[#d38488] px-4 py-3 rounded-md text-sm">
                 <p>
                   Codigo enviado a: <strong>{email}</strong>
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="code" className="text-amber-900">Codigo de verificacion</Label>
+                <Label htmlFor="code" className="text-[#655642]">Codigo de verificacion</Label>
                 <Input
                   id="code"
                   type="text"
@@ -149,12 +149,12 @@ function ResetPasswordForm() {
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.replace(/\D/g, "").slice(0, 6) })}
                   required
                   maxLength={6}
-                  className="text-center text-2xl tracking-widest font-mono border-pink-200 focus:border-pink-400"
+                  className="text-center text-2xl tracking-widest font-mono border-[#d38488]/30 focus:border-[#d38488]"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-amber-900">Nueva contrasena</Label>
+                <Label htmlFor="password" className="text-[#655642]">Nueva contrasena</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -164,7 +164,7 @@ function ResetPasswordForm() {
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
                     minLength={6}
-                    className="border-pink-200 focus:border-pink-400"
+                    className="border-[#d38488]/30 focus:border-[#d38488]"
                   />
                   <Button
                     type="button"
@@ -179,7 +179,7 @@ function ResetPasswordForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-amber-900">Confirmar nueva contrasena</Label>
+                <Label htmlFor="confirmPassword" className="text-[#655642]">Confirmar nueva contrasena</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
@@ -188,7 +188,7 @@ function ResetPasswordForm() {
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     required
-                    className="border-pink-200 focus:border-pink-400"
+                    className="border-[#d38488]/30 focus:border-[#d38488]"
                   />
                   <Button
                     type="button"
@@ -202,7 +202,7 @@ function ResetPasswordForm() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-pink-300 hover:bg-pink-400 text-amber-900" disabled={loading || formData.code.length !== 6}>
+              <Button type="submit" className="w-full bg-[#d38488] hover:bg-[#d38488] text-[#655642]" disabled={loading || formData.code.length !== 6}>
                 <CheckCircle className="w-4 h-4 mr-2" />
                 {loading ? "Restableciendo..." : "Restablecer contrasena"}
               </Button>
@@ -211,7 +211,7 @@ function ResetPasswordForm() {
             <div className="mt-6 text-center">
               <Link
                 href="/login"
-                className="text-sm text-pink-400 hover:text-pink-500 font-medium inline-flex items-center gap-1"
+                className="text-sm text-[#d38488] hover:text-[#d38488]/100 font-medium inline-flex items-center gap-1"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Volver al inicio de sesion
@@ -226,7 +226,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center">Cargando...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white flex items-center justify-center">Cargando...</div>}>
       <ResetPasswordForm />
     </Suspense>
   )

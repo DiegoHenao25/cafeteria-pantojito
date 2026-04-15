@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Coffee, Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 
 export default function LoginPage() {
@@ -38,7 +38,6 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // Guardar token y datos del usuario
         localStorage.setItem("token", data.token)
         localStorage.setItem("user", JSON.stringify(data.user))
 
@@ -48,32 +47,32 @@ export default function LoginPage() {
           router.push("/menu")
         }
       } else {
-        setError(data.error || "Error al iniciar sesión")
+        setError(data.error || "Error al iniciar sesion")
       }
     } catch (error) {
-      setError("Error de conexión")
+      setError("Error de conexion")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo y titulo */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-pink-200" />
+            <img src="/logo.jpeg" alt="Pantojitos Logo" className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-[#d38488]/30" />
           </div>
-          <h1 className="text-3xl font-bold text-amber-900">Pantojitos</h1>
-          <p className="text-pink-400 mt-2 font-medium">Dulce Tradicion</p>
-          <p className="text-amber-700 mt-1">Inicia sesion para continuar</p>
+          <h1 className="text-3xl font-bold text-[#655642]">Pantojitos</h1>
+          <p className="text-[#d38488] mt-2 font-medium">Dulce Tradicion</p>
+          <p className="text-[#655642]/70 mt-1">Inicia sesion para continuar</p>
         </div>
 
-        <Card className="shadow-lg">
+        <Card className="shadow-lg border-[#d38488]/20">
           <CardHeader>
-            <CardTitle>Iniciar Sesión</CardTitle>
-            <CardDescription>Ingresa tus credenciales para acceder</CardDescription>
+            <CardTitle className="text-[#655642]">Iniciar Sesion</CardTitle>
+            <CardDescription className="text-[#655642]/60">Ingresa tus credenciales para acceder</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,7 +81,7 @@ export default function LoginPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-[#655642]">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -90,25 +89,27 @@ export default function LoginPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
+                  className="border-[#d38488]/30 focus:border-[#d38488]"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <Label htmlFor="password" className="text-[#655642]">Contrasena</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="********"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
+                    className="border-[#d38488]/30 focus:border-[#d38488]"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-[#655642]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -116,7 +117,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-pink-400 hover:bg-pink-500 text-white" disabled={loading}>
+              <Button type="submit" className="w-full bg-[#d38488] hover:bg-[#d38488]/90 text-white" disabled={loading}>
                 {loading ? "Iniciando sesion..." : "Iniciar Sesion"}
               </Button>
             </form>
@@ -124,17 +125,17 @@ export default function LoginPage() {
             <div className="mt-6 text-center">
               <Link 
                 href="/forgot-password" 
-                className="inline-block px-4 py-2 text-sm text-pink-500 font-medium border-2 border-pink-200 rounded-full hover:bg-pink-50 hover:border-pink-300 transition-all"
+                className="inline-block px-4 py-2 text-sm text-[#d38488] font-medium border-2 border-[#d38488]/30 rounded-full hover:bg-[#d38488]/10 hover:border-[#d38488] transition-all"
               >
                 Olvidaste tu contrasena?
               </Link>
             </div>
 
             <div className="mt-4 text-center">
-              <div className="inline-block px-4 py-2 border-2 border-amber-200 rounded-full bg-amber-50/50">
-                <p className="text-sm text-amber-700">
+              <div className="inline-block px-4 py-2 border-2 border-[#7BB39C]/30 rounded-full bg-[#7BB39C]/10">
+                <p className="text-sm text-[#655642]">
                   No tienes cuenta?{" "}
-                  <Link href="/register" className="text-pink-500 hover:text-pink-600 font-semibold">
+                  <Link href="/register" className="text-[#d38488] hover:text-[#d38488]/80 font-semibold">
                     Registrate aqui
                   </Link>
                 </p>

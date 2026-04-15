@@ -56,11 +56,11 @@ export default function PaymentResultPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
-        <Card className="max-w-md w-full text-center border-2 border-pink-200">
+      <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white flex items-center justify-center p-4">
+        <Card className="max-w-md w-full text-center border-2 border-[#d38488]/30">
           <CardContent className="pt-6">
-            <Loader2 className="w-16 h-16 text-pink-400 animate-spin mx-auto mb-4" />
-            <p className="text-amber-700">Procesando tu pago...</p>
+            <Loader2 className="w-16 h-16 text-[#d38488] animate-spin mx-auto mb-4" />
+            <p className="text-[#655642]/80">Procesando tu pago...</p>
           </CardContent>
         </Card>
       </div>
@@ -68,29 +68,29 @@ export default function PaymentResultPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
-      <Card className="max-w-md w-full text-center border-2 border-pink-200">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white flex items-center justify-center p-4">
+      <Card className="max-w-md w-full text-center border-2 border-[#d38488]/30">
         <CardContent className="pt-6">
           {status === "success" ? (
             <>
               <div className="flex justify-center mb-4">
-                <div className="bg-pink-100 p-4 rounded-full">
-                  <CheckCircle className="w-16 h-16 text-pink-500" />
+                <div className="bg-[#d38488]/20 p-4 rounded-full">
+                  <CheckCircle className="w-16 h-16 text-[#d38488]" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-amber-900 mb-2">Pago exitoso</h2>
-              <p className="text-amber-700 mb-4">Tu pedido #{orderNumber} ha sido confirmado y esta siendo preparado.</p>
+              <h2 className="text-2xl font-bold text-[#655642] mb-2">Pago exitoso</h2>
+              <p className="text-[#655642]/80 mb-4">Tu pedido #{orderNumber} ha sido confirmado y esta siendo preparado.</p>
               <div className="flex flex-col gap-3">
                 <Button 
                   onClick={() => router.push("/pedidos")} 
-                  className="bg-pink-400 hover:bg-pink-500 text-white"
+                  className="bg-[#d38488] hover:bg-[#d38488] text-white"
                 >
                   Ver mis pedidos
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => router.push("/menu")} 
-                  className="border-2 border-pink-300 text-amber-900 hover:bg-pink-50"
+                  className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10"
                 >
                   Volver al menu
                 </Button>
@@ -103,11 +103,11 @@ export default function PaymentResultPage() {
                   <XCircle className="w-16 h-16 text-red-500" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-amber-900 mb-2">Pago cancelado</h2>
-              <p className="text-amber-700 mb-4">El pago no se completo. Puedes intentar de nuevo.</p>
+              <h2 className="text-2xl font-bold text-[#655642] mb-2">Pago cancelado</h2>
+              <p className="text-[#655642]/80 mb-4">El pago no se completo. Puedes intentar de nuevo.</p>
               <Button 
                 onClick={() => router.push("/checkout")} 
-                className="bg-pink-400 hover:bg-pink-500 text-white"
+                className="bg-[#d38488] hover:bg-[#d38488] text-white"
               >
                 Intentar de nuevo
               </Button>

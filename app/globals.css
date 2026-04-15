@@ -4,40 +4,62 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Paleta Pantojitos: Rosa Pastel, Cafe Chocolate, Crema, Blanco */
-  --background: 30 30% 98%; /* Blanco cremoso */
-  --foreground: 25 35% 20%; /* Cafe oscuro */
+  /* Paleta Oficial Pantojitos - Manual de Identidad Visual */
+  /* Rosa Oscuro: #d38488 | Rosa Claro: #d38BB6 | Verde Menta: #7BB39C | Amarillo: #e9e076 | Marron Cafe: #655642 */
+  
+  --background: 30 20% 97%; /* Fondo cremoso suave */
+  --foreground: 30 20% 25%; /* Marron cafe #655642 */
+  
   --card: 0 0% 100%; /* Blanco puro */
-  --card-foreground: 25 35% 20%;
+  --card-foreground: 30 20% 25%; /* Marron cafe */
+  
   --popover: 0 0% 100%;
-  --popover-foreground: 25 35% 20%;
-  --primary: 350 60% 75%; /* Rosa Pastel suave #E8A0B0 */
-  --primary-foreground: 25 35% 20%; /* Cafe oscuro para contraste */
-  --secondary: 30 25% 92%; /* Crema claro */
-  --secondary-foreground: 25 35% 25%;
-  --muted: 350 30% 95%; /* Rosa muy claro */
-  --muted-foreground: 25 20% 45%;
-  --accent: 25 45% 30%; /* Cafe chocolate #6B4423 */
+  --popover-foreground: 30 20% 25%;
+  
+  --primary: 357 45% 67%; /* Rosa Oscuro #d38488 */
+  --primary-foreground: 0 0% 100%; /* Blanco para contraste */
+  
+  --secondary: 330 40% 73%; /* Rosa Claro #d38BB6 */
+  --secondary-foreground: 30 20% 25%; /* Marron cafe */
+  
+  --muted: 330 30% 92%; /* Rosa muy suave */
+  --muted-foreground: 30 15% 40%;
+  
+  --accent: 153 28% 59%; /* Verde Menta #7BB39C */
   --accent-foreground: 0 0% 100%;
+  
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --border: 350 25% 90%; /* Rosa pastel borde */
-  --input: 350 25% 90%;
-  --ring: 350 60% 75%; /* Rosa pastel */
-  --chart-1: 350 60% 75%; /* Rosa pastel */
-  --chart-2: 25 45% 30%; /* Cafe */
-  --chart-3: 30 30% 60%; /* Crema oscuro */
-  --chart-4: 350 50% 85%; /* Rosa muy claro */
-  --chart-5: 25 35% 40%; /* Cafe claro */
+  
+  --border: 330 25% 85%; /* Borde rosa suave */
+  --input: 330 25% 88%;
+  --ring: 357 45% 67%; /* Rosa Oscuro */
+  
+  /* Charts con paleta Pantojitos */
+  --chart-1: 357 45% 67%; /* Rosa Oscuro #d38488 */
+  --chart-2: 153 28% 59%; /* Verde Menta #7BB39C */
+  --chart-3: 51 70% 69%; /* Amarillo #e9e076 */
+  --chart-4: 330 40% 73%; /* Rosa Claro #d38BB6 */
+  --chart-5: 30 20% 32%; /* Marron Cafe #655642 */
+  
   --radius: 0.75rem;
+  
+  /* Sidebar */
   --sidebar: 0 0% 100%;
-  --sidebar-foreground: 25 35% 20%;
-  --sidebar-primary: 350 60% 75%;
-  --sidebar-primary-foreground: 25 35% 20%;
-  --sidebar-accent: 350 30% 96%;
-  --sidebar-accent-foreground: 25 35% 20%;
-  --sidebar-border: 350 25% 92%;
-  --sidebar-ring: 350 60% 75%;
+  --sidebar-foreground: 30 20% 25%;
+  --sidebar-primary: 357 45% 67%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 330 30% 95%;
+  --sidebar-accent-foreground: 30 20% 25%;
+  --sidebar-border: 330 25% 90%;
+  --sidebar-ring: 357 45% 67%;
+  
+  /* Colores personalizados Pantojitos */
+  --pantojitos-rosa-oscuro: #d38488;
+  --pantojitos-rosa-claro: #d38BB6;
+  --pantojitos-verde: #7BB39C;
+  --pantojitos-amarillo: #e9e076;
+  --pantojitos-cafe: #655642;
 }
 
 .dark {
@@ -114,6 +136,13 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Colores directos Pantojitos para uso en clases */
+  --color-pantojitos-rosa: #d38488;
+  --color-pantojitos-rosa-claro: #d38BB6;
+  --color-pantojitos-verde: #7BB39C;
+  --color-pantojitos-amarillo: #e9e076;
+  --color-pantojitos-cafe: #655642;
 }
 
 @layer base {

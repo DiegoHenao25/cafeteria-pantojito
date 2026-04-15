@@ -112,10 +112,8 @@ export default function CheckoutPage() {
         return
       }
 
-      // Limpiar carrito antes de redirigir
       localStorage.removeItem("cart")
 
-      // Construir URL de checkout de Wompi (redireccion directa)
       const wompiUrl = new URL("https://checkout.wompi.co/p/")
       wompiUrl.searchParams.append("public-key", data.publicKey)
       wompiUrl.searchParams.append("currency", data.currency)
@@ -123,7 +121,6 @@ export default function CheckoutPage() {
       wompiUrl.searchParams.append("reference", data.wompiReference)
       wompiUrl.searchParams.append("redirect-url", data.redirectUrl)
       
-      // Datos del cliente
       wompiUrl.searchParams.append("customer-data:email", formData.correo)
       wompiUrl.searchParams.append("customer-data:full-name", `${formData.nombre} ${formData.apellido}`)
       wompiUrl.searchParams.append("customer-data:phone-number", formData.telefono)
@@ -131,12 +128,10 @@ export default function CheckoutPage() {
       wompiUrl.searchParams.append("customer-data:legal-id", formData.cedula)
       wompiUrl.searchParams.append("customer-data:legal-id-type", "CC")
 
-      // Agregar firma si existe
       if (data.signature) {
         wompiUrl.searchParams.append("signature:integrity", data.signature)
       }
 
-      // Redirigir a Wompi
       window.location.href = wompiUrl.toString()
 
     } catch (error) {
@@ -147,18 +142,18 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
-      <header className="bg-white shadow-sm border-b border-pink-100">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf6f6] to-white">
+      <header className="bg-white shadow-sm border-b border-[#d38488]/20">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={() => router.back()} className="text-amber-900 hover:bg-pink-50">
+            <Button variant="ghost" onClick={() => router.back()} className="text-[#655642] hover:bg-[#d38488]/10">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-3">
-              <img src="/logo.jpeg" alt="Pantojitos" className="w-10 h-10 rounded-full object-cover border-2 border-pink-200" />
+              <img src="/logo.jpeg" alt="Pantojitos" className="w-10 h-10 rounded-full object-cover border-2 border-[#d38488]/30" />
               <div>
-                <h1 className="text-xl font-bold text-amber-900">Finalizar Pedido</h1>
-                <p className="text-sm text-pink-400">Pantojitos - Dulce Tradicion</p>
+                <h1 className="text-xl font-bold text-[#655642]">Finalizar Pedido</h1>
+                <p className="text-sm text-[#d38488]">Pantojitos - Dulce Tradicion</p>
               </div>
             </div>
           </div>
@@ -169,15 +164,15 @@ export default function CheckoutPage() {
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-              <Card className="border-pink-100">
+              <Card className="border-[#d38488]/20">
                 <CardHeader>
-                  <CardTitle className="text-amber-900">Informacion Personal</CardTitle>
-                  <CardDescription className="text-amber-700">Completa tus datos para el pedido</CardDescription>
+                  <CardTitle className="text-[#655642]">Informacion Personal</CardTitle>
+                  <CardDescription className="text-[#655642]/60">Completa tus datos para el pedido</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="nombre" className="text-amber-900">Nombre *</Label>
+                      <Label htmlFor="nombre" className="text-[#655642]">Nombre *</Label>
                       <Input
                         id="nombre"
                         name="nombre"
@@ -185,11 +180,11 @@ export default function CheckoutPage() {
                         onChange={handleInputChange}
                         placeholder="Juan"
                         required
-                        className="border-pink-200 focus:border-pink-400"
+                        className="border-[#d38488]/30 focus:border-[#d38488]"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="apellido" className="text-amber-900">Apellido *</Label>
+                      <Label htmlFor="apellido" className="text-[#655642]">Apellido *</Label>
                       <Input
                         id="apellido"
                         name="apellido"
@@ -197,13 +192,13 @@ export default function CheckoutPage() {
                         onChange={handleInputChange}
                         placeholder="Perez"
                         required
-                        className="border-pink-200 focus:border-pink-400"
+                        className="border-[#d38488]/30 focus:border-[#d38488]"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="cedula" className="text-amber-900">Cedula o Documento de Identidad *</Label>
+                    <Label htmlFor="cedula" className="text-[#655642]">Cedula o Documento de Identidad *</Label>
                     <Input
                       id="cedula"
                       name="cedula"
@@ -211,13 +206,13 @@ export default function CheckoutPage() {
                       onChange={handleInputChange}
                       placeholder=""
                       required
-                      className="border-pink-200 focus:border-pink-400 placeholder:text-pink-200"
+                      className="border-[#d38488]/30 focus:border-[#d38488]"
                     />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="telefono" className="text-amber-900">Numero de Telefono *</Label>
+                      <Label htmlFor="telefono" className="text-[#655642]">Numero de Telefono *</Label>
                       <Input
                         id="telefono"
                         name="telefono"
@@ -226,11 +221,11 @@ export default function CheckoutPage() {
                         onChange={handleInputChange}
                         placeholder=""
                         required
-                        className="border-pink-200 focus:border-pink-400 placeholder:text-pink-200"
+                        className="border-[#d38488]/30 focus:border-[#d38488]"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="correo" className="text-amber-900">Correo Electronico *</Label>
+                      <Label htmlFor="correo" className="text-[#655642]">Correo Electronico *</Label>
                       <Input
                         id="correo"
                         name="correo"
@@ -239,48 +234,32 @@ export default function CheckoutPage() {
                         onChange={handleInputChange}
                         placeholder="correo@ejemplo.com"
                         required
-                        className="border-pink-200 focus:border-pink-400"
+                        className="border-[#d38488]/30 focus:border-[#d38488]"
                       />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-pink-100">
+              <Card className="border-[#d38488]/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-amber-900">
-                    <Clock className="w-5 h-5 text-pink-400" />
+                  <CardTitle className="flex items-center gap-2 text-[#655642]">
+                    <Clock className="w-5 h-5 text-[#d38488]" />
                     Tiempo de Recogida
                   </CardTitle>
-                  <CardDescription className="text-amber-700">En cuanto tiempo necesitas tu pedido?</CardDescription>
+                  <CardDescription className="text-[#655642]/60">En cuanto tiempo necesitas tu pedido?</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <RadioGroup value={tiempoRecogida} onValueChange={setTiempoRecogida}>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="flex items-center space-x-2 p-3 border border-pink-200 rounded-lg hover:bg-pink-50 cursor-pointer">
-                        <RadioGroupItem value="15" id="15min" />
-                        <Label htmlFor="15min" className="cursor-pointer flex-1 text-center font-medium text-amber-900">
-                          15 min
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2 p-3 border border-pink-200 rounded-lg hover:bg-pink-50 cursor-pointer">
-                        <RadioGroupItem value="20" id="20min" />
-                        <Label htmlFor="20min" className="cursor-pointer flex-1 text-center font-medium text-amber-900">
-                          20 min
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2 p-3 border border-pink-200 rounded-lg hover:bg-pink-50 cursor-pointer">
-                        <RadioGroupItem value="30" id="30min" />
-                        <Label htmlFor="30min" className="cursor-pointer flex-1 text-center font-medium text-amber-900">
-                          30 min
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2 p-3 border border-pink-200 rounded-lg hover:bg-pink-50 cursor-pointer">
-                        <RadioGroupItem value="45" id="45min" />
-                        <Label htmlFor="45min" className="cursor-pointer flex-1 text-center font-medium text-amber-900">
-                          45 min
-                        </Label>
-                      </div>
+                      {["15", "20", "30", "45"].map((time) => (
+                        <div key={time} className="flex items-center space-x-2 p-3 border border-[#d38488]/30 rounded-lg hover:bg-[#d38488]/10 cursor-pointer">
+                          <RadioGroupItem value={time} id={`${time}min`} />
+                          <Label htmlFor={`${time}min`} className="cursor-pointer flex-1 text-center font-medium text-[#655642]">
+                            {time} min
+                          </Label>
+                        </div>
+                      ))}
                     </div>
                   </RadioGroup>
                 </CardContent>
@@ -288,79 +267,79 @@ export default function CheckoutPage() {
             </div>
 
             <div className="lg:col-span-1">
-              <Card className="sticky top-6 border-pink-100">
+              <Card className="sticky top-6 border-[#d38488]/20">
                 <CardHeader>
-                  <CardTitle className="text-amber-900">Resumen del Pedido</CardTitle>
-                  <CardDescription className="text-amber-700">{cart.length} producto(s)</CardDescription>
+                  <CardTitle className="text-[#655642]">Resumen del Pedido</CardTitle>
+                  <CardDescription className="text-[#655642]/60">{cart.length} producto(s)</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
                     {cart.map((item, index) => (
-                      <div key={index} className="flex items-center gap-3 p-2 bg-pink-50 rounded-lg">
+                      <div key={index} className="flex items-center gap-3 p-2 bg-[#d38488]/10 rounded-lg">
                         <img
                           src={item.imagen || `/placeholder.svg?height=50&width=50&query=${encodeURIComponent(item.nombre)}`}
                           alt={item.nombre}
                           className="w-12 h-12 object-cover rounded"
                         />
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-sm truncate text-amber-900">{item.nombre}</h4>
-                          <p className="text-xs text-amber-700">
+                          <h4 className="font-medium text-sm truncate text-[#655642]">{item.nombre}</h4>
+                          <p className="text-xs text-[#655642]/60">
                             ${item.precio.toLocaleString()} x {item.cantidad}
                           </p>
                         </div>
-                        <div className="font-medium text-sm text-amber-900">${(item.precio * item.cantidad).toLocaleString()}</div>
+                        <div className="font-medium text-sm text-[#655642]">${(item.precio * item.cantidad).toLocaleString()}</div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="border-t border-pink-200 pt-4 space-y-2">
+                  <div className="border-t border-[#d38488]/20 pt-4 space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-amber-700">Subtotal:</span>
-                      <span className="font-medium text-amber-900">${getSubtotal().toLocaleString()}</span>
+                      <span className="text-[#655642]/70">Subtotal:</span>
+                      <span className="font-medium text-[#655642]">${getSubtotal().toLocaleString()}</span>
                     </div>
                     
                     <div className="flex justify-between text-sm items-center">
-                      <span className="text-amber-700 flex items-center gap-1">
+                      <span className="text-[#655642]/70 flex items-center gap-1">
                         <CreditCard className="w-3 h-3" />
                         Comision Wompi (1.98%):
                         <span className="relative group">
-                          <Info className="w-3 h-3 text-pink-400 cursor-help" />
-                          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-amber-900 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          <Info className="w-3 h-3 text-[#d38488] cursor-help" />
+                          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-[#655642] text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                             Cargo por procesamiento de pago
                           </span>
                         </span>
                       </span>
-                      <span className="font-medium text-pink-500">${getComision().toLocaleString()}</span>
+                      <span className="font-medium text-[#d38BB6]">${getComision().toLocaleString()}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                      <span className="text-amber-700">Tiempo de recogida:</span>
-                      <span className="font-medium text-amber-900">{tiempoRecogida} min</span>
+                      <span className="text-[#655642]/70">Tiempo de recogida:</span>
+                      <span className="font-medium text-[#655642]">{tiempoRecogida} min</span>
                     </div>
                     
-                    <div className="flex justify-between items-center text-lg font-bold border-t border-pink-200 pt-2">
-                      <span className="text-amber-900">Total a pagar:</span>
-                      <span className="text-green-600">${getTotal().toLocaleString()}</span>
+                    <div className="flex justify-between items-center text-lg font-bold border-t border-[#d38488]/20 pt-2">
+                      <span className="text-[#655642]">Total a pagar:</span>
+                      <span className="text-[#7BB39C]">${getTotal().toLocaleString()}</span>
                     </div>
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full bg-pink-400 hover:bg-pink-500 text-white mt-6"
+                    className="w-full bg-[#d38488] hover:bg-[#d38488]/90 text-white mt-6"
                     disabled={loading}
                     size="lg"
                   >
                     {loading ? "Redirigiendo a Wompi..." : "Pagar con Wompi"}
                   </Button>
 
-                  <div className="mt-4 p-3 bg-pink-50 rounded-lg border border-pink-200">
-                    <p className="text-xs text-pink-600 text-center">
+                  <div className="mt-4 p-3 bg-[#d38488]/10 rounded-lg border border-[#d38488]/20">
+                    <p className="text-xs text-[#d38488] text-center">
                       <CreditCard className="w-4 h-4 inline-block mr-1" />
                       Paga con Nequi, Bancolombia, PSE, tarjetas de credito/debito y mas
                     </p>
                   </div>
 
-                  <p className="text-xs text-center text-amber-600 mt-3">
+                  <p className="text-xs text-center text-[#655642]/60 mt-3">
                     Pago seguro procesado por Wompi
                   </p>
                 </CardContent>
