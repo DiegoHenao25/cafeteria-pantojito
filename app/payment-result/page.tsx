@@ -46,7 +46,7 @@ export default function PaymentResultPage() {
         localStorage.removeItem("cart")
       }
     } catch (error) {
-      console.error("[v0] Error completando orden:", error)
+      console.error("Error completando orden:", error)
     } finally {
       setLoading(false)
     }
@@ -56,11 +56,11 @@ export default function PaymentResultPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full text-center">
+      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+        <Card className="max-w-md w-full text-center border-2 border-pink-200">
           <CardContent className="pt-6">
-            <Loader2 className="w-16 h-16 text-amber-600 animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Procesando tu pago...</p>
+            <Loader2 className="w-16 h-16 text-pink-400 animate-spin mx-auto mb-4" />
+            <p className="text-amber-700">Procesando tu pago...</p>
           </CardContent>
         </Card>
       </div>
@@ -68,33 +68,48 @@ export default function PaymentResultPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center p-4">
-      <Card className="max-w-md w-full text-center">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+      <Card className="max-w-md w-full text-center border-2 border-pink-200">
         <CardContent className="pt-6">
           {status === "success" ? (
             <>
               <div className="flex justify-center mb-4">
-                <div className="bg-green-100 p-4 rounded-full">
-                  <CheckCircle className="w-16 h-16 text-green-600" />
+                <div className="bg-pink-100 p-4 rounded-full">
+                  <CheckCircle className="w-16 h-16 text-pink-500" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Pago Exitoso</h2>
-              <p className="text-gray-600 mb-4">Tu pedido #{orderNumber} ha sido confirmado y está siendo preparado.</p>
-              <Button onClick={() => router.push("/menu")} className="bg-amber-600 hover:bg-amber-700">
-                Volver al Menú
-              </Button>
+              <h2 className="text-2xl font-bold text-amber-900 mb-2">Pago exitoso</h2>
+              <p className="text-amber-700 mb-4">Tu pedido #{orderNumber} ha sido confirmado y esta siendo preparado.</p>
+              <div className="flex flex-col gap-3">
+                <Button 
+                  onClick={() => router.push("/pedidos")} 
+                  className="bg-pink-400 hover:bg-pink-500 text-white"
+                >
+                  Ver mis pedidos
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => router.push("/menu")} 
+                  className="border-2 border-pink-300 text-amber-900 hover:bg-pink-50"
+                >
+                  Volver al menu
+                </Button>
+              </div>
             </>
           ) : (
             <>
               <div className="flex justify-center mb-4">
                 <div className="bg-red-100 p-4 rounded-full">
-                  <XCircle className="w-16 h-16 text-red-600" />
+                  <XCircle className="w-16 h-16 text-red-500" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Pago Cancelado</h2>
-              <p className="text-gray-600 mb-4">El pago no se completó. Puedes intentar de nuevo.</p>
-              <Button onClick={() => router.push("/checkout")} className="bg-amber-600 hover:bg-amber-700">
-                Intentar de Nuevo
+              <h2 className="text-2xl font-bold text-amber-900 mb-2">Pago cancelado</h2>
+              <p className="text-amber-700 mb-4">El pago no se completo. Puedes intentar de nuevo.</p>
+              <Button 
+                onClick={() => router.push("/checkout")} 
+                className="bg-pink-400 hover:bg-pink-500 text-white"
+              >
+                Intentar de nuevo
               </Button>
             </>
           )}

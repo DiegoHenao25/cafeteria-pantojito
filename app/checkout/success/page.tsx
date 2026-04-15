@@ -13,11 +13,9 @@ export default function PaymentSuccessPage() {
   const [orderDetails, setOrderDetails] = useState<any>(null)
 
   useEffect(() => {
-    // Wompi puede enviar el orderId directamente o como external_reference
     const orderId = searchParams.get("orderId") || searchParams.get("external_reference") || searchParams.get("id")
 
     if (orderId) {
-      // Obtener detalles de la orden
       fetch(`/api/orders/${orderId}`)
         .then((res) => res.json())
         .then((data) => setOrderDetails(data))
@@ -26,58 +24,73 @@ export default function PaymentSuccessPage() {
   }, [searchParams])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 flex items-center justify-center p-4">
-      <Card className="max-w-2xl w-full">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4">
+      <Card className="max-w-2xl w-full border-2 border-pink-200">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-green-100 p-4 rounded-full">
-              <CheckCircle className="w-16 h-16 text-green-600" />
+            <div className="bg-pink-100 p-4 rounded-full">
+              <CheckCircle className="w-16 h-16 text-pink-500" />
             </div>
           </div>
-          <CardTitle className="text-3xl text-green-600">Pago Exitoso</CardTitle>
-          <CardDescription className="text-lg">Tu pedido ha sido confirmado</CardDescription>
+          <CardTitle className="text-3xl text-amber-900">Pago exitoso</CardTitle>
+          <CardDescription className="text-lg text-pink-400">Tu pedido ha sido confirmado</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {orderDetails && (
-            <div className="bg-amber-50 p-6 rounded-lg space-y-4">
+          {orderDetails ? (
+            <div className="bg-pink-50 p-6 rounded-lg space-y-4 border border-pink-200">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Número de Pedido:</span>
-                <span className="font-bold text-lg">#{orderDetails.id}</span>
+                <span className="text-amber-700">Numero de pedido:</span>
+                <span className="font-bold text-lg text-amber-900">#{orderDetails.id}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Total:</span>
-                <span className="font-bold text-lg text-green-600">${orderDetails.total?.toLocaleString()}</span>
+                <span className="text-amber-700">Total:</span>
+                <span className="font-bold text-lg text-pink-500">${orderDetails.total?.toLocaleString()}</span>
               </div>
-              <div className="flex items-center gap-2 text-amber-600">
-                <Clock className="w-5 h-5" />
+              <div className="flex items-center gap-2 text-amber-700">
+                <Clock className="w-5 h-5 text-pink-400" />
                 <span>Tiempo de recogida: {orderDetails.tiempoRecogida} minutos</span>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-pink-50 p-6 rounded-lg space-y-4 border border-pink-200">
+              <div className="flex items-center justify-between">
+                <span className="text-amber-700">Numero de pedido:</span>
+                <span className="font-bold text-lg text-amber-900">#</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-amber-700">Total:</span>
+                <span className="font-bold text-lg text-pink-500">$</span>
+              </div>
+              <div className="flex items-center gap-2 text-amber-700">
+                <Clock className="w-5 h-5 text-pink-400" />
+                <span>Tiempo de recogida: minutos</span>
               </div>
             </div>
           )}
 
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="text-sm text-blue-900">
-              <strong>Próximos pasos:</strong>
+          <div className="bg-pink-50 p-4 rounded-lg border border-pink-200">
+            <p className="text-sm text-amber-900">
+              <strong className="text-amber-900">Proximos pasos:</strong>
               <br />
-              1. Recibirás una notificación cuando tu pedido esté listo
+              1. Recibiras una notificacion cuando tu pedido este listo
               <br />
-              2. Dirígete a la cafetería para recoger tu pedido
+              2. Dirigete a la cafeteria para recoger tu pedido
               <br />
-              3. Muestra este número de pedido al personal
+              3. Muestra este numero de pedido al personal
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            {orderDetails && (
-              <Link href={`/my-order?id=${orderDetails.id}`} className="flex-1">
-                <Button className="w-full">Ver Estado del Pedido</Button>
-              </Link>
-            )}
+            <Link href="/pedidos" className="flex-1">
+              <Button className="w-full bg-pink-400 hover:bg-pink-500 text-white">
+                Ver estado del pedido
+              </Button>
+            </Link>
             <Link href="/menu" className="flex-1">
-              <Button variant="outline" className="w-full bg-transparent">
+              <Button variant="outline" className="w-full border-2 border-pink-300 text-amber-900 hover:bg-pink-50">
                 <Coffee className="w-4 h-4 mr-2" />
-                Volver al Menú
+                Volver al menu
               </Button>
             </Link>
           </div>
