@@ -101,6 +101,8 @@ export default function OrdersManagement() {
 
   const getStatusBadge = (estado: string) => {
     switch (estado) {
+      case "pendiente_pago":
+        return <Badge className="bg-[#e9e076]/50 text-[#655642] border border-[#e9e076] border-dashed">Esperando Pago</Badge>
       case "pendiente":
         return <Badge className="bg-[#e9e076]/30 text-[#655642] border border-[#e9e076]">Pendiente</Badge>
       case "en_proceso":
@@ -217,7 +219,15 @@ export default function OrdersManagement() {
         </Sheet>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+          <Card className="border-[#e9e076]/30 border-dashed">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs text-[#655642]">Esperando Pago</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-[#e9e076]/70">{orders.filter((o) => o.estado === "pendiente_pago").length}</p>
+            </CardContent>
+          </Card>
           <Card className="border-[#e9e076]/50">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-[#655642]">Pendientes</CardTitle>
@@ -328,6 +338,12 @@ export default function OrdersManagement() {
                   </div>
 
                   {/* Botones de accion */}
+                  {order.estado === "pendiente_pago" && (
+                    <span className="text-[#e9e076] font-medium flex items-center gap-2 text-sm">
+                      <Clock className="w-4 h-4 animate-pulse" />
+                      Esperando confirmacion de pago...
+                    </span>
+                  )}
                   {order.estado === "pendiente" && (
                     <Button onClick={() => updateOrderStatus(order.id, "en_proceso")} className="bg-[#d38BB6] hover:bg-[#d38BB6]/80 text-white">
                       <Clock className="w-4 h-4 mr-2" />

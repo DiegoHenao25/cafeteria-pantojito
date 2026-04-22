@@ -56,6 +56,13 @@ export default function PedidosPage() {
 
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
+      case "pendiente_pago":
+        return (
+          <Badge className="bg-[#e9e076]/50 text-[#655642] border border-[#e9e076] border-dashed">
+            <Clock className="w-3 h-3 mr-1" />
+            Esperando Pago
+          </Badge>
+        )
       case "pendiente":
         return (
           <Badge className="bg-[#e9e076]/30 text-[#655642] border border-[#e9e076]">

@@ -55,15 +55,15 @@ export async function POST(request: NextRequest) {
     // Generar referencia única para Wompi
     const wompiReference = `PANTOJITO-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`
 
-    // Crear la orden en base de datos
-    // Nota: Los campos subtotal, comisionPago, wompiReference, wompiStatus son opcionales
-    // hasta que se ejecute la migración SQL
+    // Crear la orden en base de datos con estado "pendiente_pago"
+    // IMPORTANTE: El estado solo cambia a "pendiente" cuando Wompi confirma el pago
+    // via webhook o verificacion directa
     const order = await prisma.order.create({
       data: {
         userId: session.userId,
         total,
         metodoPago: "wompi",
-        estado: "pendiente",
+        estado: "pendiente_pago", // Esperando confirmacion de pago
         tiempoRecogida: tiempoRecogida || 15,
         clienteNombre: `${clienteInfo.nombre} ${clienteInfo.apellido || ""}`.trim(),
         clienteCedula: clienteInfo.cedula,
