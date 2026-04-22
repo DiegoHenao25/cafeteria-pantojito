@@ -5,9 +5,12 @@ import { getSession } from "@/lib/auth"
 // GET - Obtener perfil del usuario actual
 export async function GET() {
   try {
+    console.log("[v0] GET /api/profile - Iniciando...")
     const session = await getSession()
+    console.log("[v0] Sesion:", session ? `userId: ${session.userId}` : "No hay sesion")
 
     if (!session) {
+      console.log("[v0] No hay sesion, retornando 401")
       return NextResponse.json({ error: "No autenticado" }, { status: 401 })
     }
     
