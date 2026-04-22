@@ -1,18 +1,16 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
+import { getSession } from "@/lib/auth"
 import bcrypt from "bcryptjs"
 
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies()
-    const sessionCookie = cookieStore.get("session")
+    const session = await getSession()
 
-    if (!sessionCookie) {
+    if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 })
     }
 
-    const session = JSON.parse(sessionCookie.value)
     const { currentPassword, newPassword } = await request.json()
 
     if (!currentPassword || !newPassword) {

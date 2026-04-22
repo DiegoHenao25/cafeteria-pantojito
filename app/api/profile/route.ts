@@ -1,19 +1,15 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
-import bcrypt from "bcryptjs"
+import { getSession } from "@/lib/auth"
 
 // GET - Obtener perfil del usuario actual
 export async function GET() {
   try {
-    const cookieStore = await cookies()
-    const sessionCookie = cookieStore.get("session")
+    const session = await getSession()
 
-    if (!sessionCookie) {
+    if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 })
     }
-
-    const session = JSON.parse(sessionCookie.value)
     
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
@@ -41,14 +37,12 @@ export async function GET() {
 // PATCH - Actualizar perfil (nombre, apellido)
 export async function PATCH(request: Request) {
   try {
-    const cookieStore = await cookies()
-    const sessionCookie = cookieStore.get("session")
+    const session = await getSession()
 
-    if (!sessionCookie) {
+    if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 })
     }
 
-    const session = JSON.parse(sessionCookie.value)
     const { nombre, apellido } = await request.json()
 
     const updatedUser = await prisma.user.update({

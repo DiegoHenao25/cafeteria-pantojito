@@ -272,24 +272,7 @@ export default function MenuPage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
-              {user?.rol === "admin" && (
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/admin")}
-                  className="border-2 border-[#d38488] text-[#d38488] hover:bg-[#d38488]/10 font-bold"
-                >
-                  <Settings className="w-4 h-4 mr-2" />
-                  Panel Admin
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                onClick={() => router.push("/pedidos")}
-                className="border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20 font-bold"
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                Mis Pedidos
-              </Button>
+              
               <Button
                 variant="outline"
                 onClick={() => setShowCart(true)}
@@ -303,14 +286,7 @@ export default function MenuPage() {
                   </Badge>
                 )}
               </Button>
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20 font-bold bg-transparent"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Salir
-              </Button>
+              
             </div>
             <Button
               variant="outline"

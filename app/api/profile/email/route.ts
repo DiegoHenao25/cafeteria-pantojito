@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
+import { getSession } from "@/lib/auth"
 
 // Store temporal para codigos de verificacion (en produccion usar Redis o base de datos)
 const verificationCodes = new Map<number, { code: string; newEmail: string; expiresAt: Date }>()
@@ -8,14 +8,12 @@ const verificationCodes = new Map<number, { code: string; newEmail: string; expi
 // POST - Enviar codigo de verificacion al email actual
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies()
-    const sessionCookie = cookieStore.get("session")
+    const session = await getSession()
 
-    if (!sessionCookie) {
+    if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 })
     }
 
-    const session = JSON.parse(sessionCookie.value)
     const { newEmail } = await request.json()
 
     if (!newEmail) {
@@ -70,14 +68,12 @@ export async function POST(request: Request) {
 // PATCH - Verificar codigo y actualizar email
 export async function PATCH(request: Request) {
   try {
-    const cookieStore = await cookies()
-    const sessionCookie = cookieStore.get("session")
+    const session = await getSession()
 
-    if (!sessionCookie) {
+    if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 })
     }
 
-    const session = JSON.parse(sessionCookie.value)
     const { code } = await request.json()
 
     if (!code) {
