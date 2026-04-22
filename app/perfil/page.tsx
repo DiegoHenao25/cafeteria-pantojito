@@ -46,29 +46,32 @@ export default function PerfilPage() {
   const [devCode, setDevCode] = useState<string | null>(null)
 
   useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        console.log("[v0] Iniciando carga de perfil...")
+        const response = await fetch("/api/profile", {
+          credentials: "include"
+        })
+        console.log("[v0] Respuesta:", response.status)
+        
+        if (response.ok) {
+          const data = await response.json()
+          console.log("[v0] Perfil cargado:", data.user?.nombre)
+          setProfile(data.user)
+          setNombre(data.user.nombre || "")
+          setApellido(data.user.apellido || "")
+        } else {
+          console.log("[v0] Error en respuesta:", response.status)
+        }
+      } catch (error) {
+        console.log("[v0] Error de red:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
     loadProfile()
   }, [])
-
-  const loadProfile = async () => {
-    try {
-      const response = await fetch("/api/profile", {
-        credentials: "include"
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setProfile(data.user)
-        setNombre(data.user.nombre || "")
-        setApellido(data.user.apellido || "")
-      }
-      // No redirigir automaticamente - dejar que el usuario vea la pagina
-      // Si no esta autenticado, simplemente no mostrara sus datos
-    } catch {
-      // Error de red - no hacer nada, mostrar la pagina sin datos
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
