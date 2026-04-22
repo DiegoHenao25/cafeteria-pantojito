@@ -2,13 +2,20 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Plus, Minus, Coffee, LogOut, User, Settings, FileText, Menu, Search } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 
 interface Category {
@@ -210,16 +217,60 @@ export default function MenuPage() {
             </div>
             <div className="hidden lg:flex items-center gap-4">
               {user && (
-                <Link
-                  href="/perfil"
-                  className="flex items-center gap-2 text-sm text-[#655642] hover:bg-[#d38488]/10 px-3 py-2 rounded-lg transition-colors"
-                >
-                  <div className="w-8 h-8 bg-[#d38488]/20 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-[#d38488]" />
-                  </div>
-                  <span>{user.nombre}</span>
-                  {user.rol === "admin" && <Badge className="bg-[#d38488] text-[#655642]">Admin</Badge>}
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 text-sm text-[#655642] hover:bg-[#d38488]/10 px-3 py-2 rounded-lg transition-colors cursor-pointer">
+                      <div className="w-8 h-8 bg-[#d38488]/20 rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-[#d38488]" />
+                      </div>
+                      <span>{user.nombre}</span>
+                      {user.rol === "admin" && <Badge className="bg-[#d38488] text-white text-xs">Admin</Badge>}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-white border-[#d38488]/20">
+                    <DropdownMenuLabel className="text-[#655642]">
+                      <div className="flex flex-col">
+                        <span className="font-medium">{user.nombre}</span>
+                        <span className="text-xs text-[#655642]/60">{user.email}</span>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={() => router.push("/perfil")}
+                      className="cursor-pointer text-[#655642] hover:bg-[#d38488]/10 focus:bg-[#d38488]/10"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Mi Perfil
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => router.push("/pedidos")}
+                      className="cursor-pointer text-[#655642] hover:bg-[#d38488]/10 focus:bg-[#d38488]/10"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Mis Pedidos
+                    </DropdownMenuItem>
+                    {user.rol === "admin" && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => router.push("/admin")}
+                          className="cursor-pointer text-[#d38488] hover:bg-[#d38488]/10 focus:bg-[#d38488]/10"
+                        >
+                          <Settings className="w-4 h-4 mr-2" />
+                          Panel de Administracion
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-600 hover:bg-red-50 focus:bg-red-50"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Cerrar Sesion
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
               {user?.rol === "admin" && (
                 <Button

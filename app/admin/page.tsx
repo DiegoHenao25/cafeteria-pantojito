@@ -10,7 +10,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu, Users, User } from "lucide-react"
+import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu, Users, User, FileText, Coffee } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -299,24 +307,47 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="hidden lg:flex items-center gap-3">
-              <Button
-                variant="ghost"
-                onClick={() => router.push("/perfil")}
-                className="text-[#655642] hover:bg-[#d38488]/10 flex items-center gap-2"
-              >
-                <div className="w-8 h-8 bg-[#d38488]/20 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-[#d38488]" />
-                </div>
-                <span className="text-sm">{userName}</span>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Cerrar Sesion
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2 text-sm text-[#655642] hover:bg-[#d38488]/10 px-3 py-2 rounded-lg transition-colors cursor-pointer">
+                    <div className="w-8 h-8 bg-[#d38488]/20 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-[#d38488]" />
+                    </div>
+                    <span>{userName}</span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white border-[#d38488]/20">
+                  <DropdownMenuLabel className="text-[#655642]">
+                    <div className="flex flex-col">
+                      <span className="font-medium">{userName}</span>
+                      <span className="text-xs text-[#d38488]">Administrador</span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={() => router.push("/perfil")}
+                    className="cursor-pointer text-[#655642] hover:bg-[#d38488]/10 focus:bg-[#d38488]/10"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Mi Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => router.push("/menu")}
+                    className="cursor-pointer text-[#655642] hover:bg-[#d38488]/10 focus:bg-[#d38488]/10"
+                  >
+                    <Coffee className="w-4 h-4 mr-2" />
+                    Ver Menu
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="cursor-pointer text-red-600 hover:bg-red-50 focus:bg-red-50"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Cerrar Sesion
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <Button
               variant="outline"
