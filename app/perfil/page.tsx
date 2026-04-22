@@ -51,17 +51,20 @@ export default function PerfilPage() {
 
   const loadProfile = async () => {
     try {
-      const response = await fetch("/api/profile")
+      const response = await fetch("/api/profile", {
+        credentials: "include"
+      })
+      
       if (response.ok) {
         const data = await response.json()
         setProfile(data.user)
         setNombre(data.user.nombre || "")
         setApellido(data.user.apellido || "")
-      } else {
-        router.push("/login")
       }
-    } catch (error) {
-      router.push("/login")
+      // No redirigir automaticamente - dejar que el usuario vea la pagina
+      // Si no esta autenticado, simplemente no mostrara sus datos
+    } catch {
+      // Error de red - no hacer nada, mostrar la pagina sin datos
     } finally {
       setLoading(false)
     }
@@ -227,36 +230,54 @@ export default function PerfilPage() {
             </div>
             <Button
               variant="outline"
-              onClick={() => router.back()}
+              onClick={() => router.push("/menu")}
               className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Volver
+              Volver al Menu
             </Button>
           </div>
         </div>
       </header>
 
       <div className="container mx-auto p-6 max-w-2xl space-y-6">
-        {/* Info del usuario */}
-        <Card className="border-[#d38488]/20">
-          <CardHeader className="text-center pb-2">
-            <div className="w-20 h-20 bg-[#d38488]/20 rounded-full mx-auto flex items-center justify-center mb-4">
-              <User className="w-10 h-10 text-[#d38488]" />
-            </div>
-            <CardTitle className="text-[#655642]">
-              {profile?.nombre || "Usuario"} {profile?.apellido || ""}
-            </CardTitle>
-            <CardDescription className="text-[#655642]/70">{profile?.email}</CardDescription>
-            <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${
-              profile?.rol === "admin" 
-                ? "bg-[#7BB39C]/20 text-[#7BB39C]" 
-                : "bg-[#d38488]/20 text-[#d38488]"
-            }`}>
-              {profile?.rol === "admin" ? "Administrador" : "Cliente"}
-            </span>
-          </CardHeader>
-        </Card>
+        {!profile ? (
+          <Card className="border-[#d38488]/20">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-[#e9e076]/20 rounded-full mx-auto flex items-center justify-center mb-4">
+                <AlertCircle className="w-8 h-8 text-[#e9e076]" />
+              </div>
+              <h3 className="text-lg font-semibold text-[#655642] mb-2">No se pudo cargar el perfil</h3>
+              <p className="text-[#655642]/70 mb-4">Puede que tu sesion haya expirado</p>
+              <Button
+                onClick={() => router.push("/login")}
+                className="bg-[#d38488] hover:bg-[#d38488]/90 text-white"
+              >
+                Iniciar Sesion
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            {/* Info del usuario */}
+            <Card className="border-[#d38488]/20">
+              <CardHeader className="text-center pb-2">
+                <div className="w-20 h-20 bg-[#d38488]/20 rounded-full mx-auto flex items-center justify-center mb-4">
+                  <User className="w-10 h-10 text-[#d38488]" />
+                </div>
+                <CardTitle className="text-[#655642]">
+                  {profile.nombre || "Usuario"} {profile.apellido || ""}
+                </CardTitle>
+                <CardDescription className="text-[#655642]/70">{profile.email}</CardDescription>
+                <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${
+                  profile.rol === "admin" 
+                    ? "bg-[#7BB39C]/20 text-[#7BB39C]" 
+                    : "bg-[#d38488]/20 text-[#d38488]"
+                }`}>
+                  {profile.rol === "admin" ? "Administrador" : "Cliente"}
+                </span>
+              </CardHeader>
+            </Card>
 
         {/* Editar nombre y apellido */}
         <Card className="border-[#d38488]/20">
@@ -519,6 +540,8 @@ export default function PerfilPage() {
             )}
           </CardContent>
         </Card>
+          </>
+        )}
       </div>
     </div>
   )
