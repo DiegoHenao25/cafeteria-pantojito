@@ -5,8 +5,12 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Clock, XCircle, ArrowLeft, LogOut, Menu } from "lucide-react"
+import { CheckCircle, Clock, XCircle, ArrowLeft, LogOut, Menu, Bell, BellOff } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { useGlobalTimer } from "@/hooks/use-global-timer"
+import { useOrderNotifications } from "@/hooks/use-order-notifications"
+import { CountdownBadge } from "@/components/countdown-badge"
+import { Toaster } from "@/components/ui/toaster"
 
 interface OrderItem {
   id: number
@@ -36,6 +40,10 @@ export default function OrdersManagement() {
   const [loading, setLoading] = useState(true)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [userName, setUserName] = useState("")
+
+  // Hooks para temporizadores y notificaciones
+  const { currentTime, getTimeRemaining, formatTime, getTimeColor, getProgress } = useGlobalTimer()
+  const { notificationPermission, requestPermission } = useOrderNotifications(orders, currentTime)
 
   useEffect(() => {
     checkAuth()
@@ -144,6 +152,14 @@ export default function OrdersManagement() {
             </div>
             <div className="hidden lg:flex items-center gap-3">
               <span className="text-[#655642]/80">Bienvenido, {userName}</span>
+              <Button
+                variant="outline"
+                onClick={requestPermission}
+                className={`border-2 ${notificationPermission === "granted" ? "border-[#7BB39C] text-[#7BB39C]" : "border-[#e9e076] text-[#655642]"} hover:bg-[#d38488]/10`}
+                title={notificationPermission === "granted" ? "Notificaciones activadas" : "Activar notificaciones"}
+              >
+                {notificationPermission === "granted" ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
+              </Button>
               <Button
                 variant="outline"
                 onClick={handleLogout}
@@ -275,7 +291,7 @@ export default function OrdersManagement() {
           {orders.map((order) => (
             <Card key={order.id} className="border-2 border-[#d38488]/20">
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-3">
                   <div>
                     <CardTitle className="text-[#655642]">Pedido #{order.id}</CardTitle>
                     <p className="text-sm text-[#655642]/80">
@@ -285,7 +301,19 @@ export default function OrdersManagement() {
                       })}
                     </p>
                   </div>
-                  {getStatusBadge(order.estado)}
+                  <div className="flex items-center gap-3">
+                    {/* Temporizador de cuenta regresiva */}
+                    {(order.estado === "pendiente" || order.estado === "en_proceso") && (
+                      <CountdownBadge
+                        timeRemaining={getTimeRemaining(order.createdAt, order.tiempoRecogida)}
+                        formattedTime={formatTime(getTimeRemaining(order.createdAt, order.tiempoRecogida))}
+                        color={getTimeColor(getTimeRemaining(order.createdAt, order.tiempoRecogida))}
+                        progress={getProgress(order.createdAt, order.tiempoRecogida)}
+                        size="md"
+                      />
+                    )}
+                    {getStatusBadge(order.estado)}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -389,6 +417,9 @@ export default function OrdersManagement() {
           )}
         </div>
       </div>
+      
+      {/* Toaster para notificaciones */}
+      <Toaster />
     </div>
   )
 }
