@@ -384,14 +384,6 @@ export default function AdminDashboard() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => router.push("/admin/clientes")}
-              className="border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Historial Clientes
-            </Button>
-            <Button
-              variant="outline"
               onClick={() => router.push("/admin/estadisticas")}
               className="border-[#7BB39C] text-[#7BB39C] hover:bg-[#7BB39C]/20"
             >
@@ -463,14 +455,6 @@ export default function AdminDashboard() {
                 Ver Pedidos
               </Button>
 <Button
-                variant="ghost"
-                onClick={() => { setShowMobileMenu(false); router.push("/admin/clientes") }}
-                className="w-full justify-start text-[#655642] hover:bg-[#e9e076]/20"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Historial Clientes
-              </Button>
-              <Button
                 variant="ghost"
                 onClick={() => { setShowMobileMenu(false); router.push("/admin/estadisticas") }}
                 className="w-full justify-start text-[#7BB39C] hover:bg-[#7BB39C]/20"

@@ -125,14 +125,26 @@ export async function POST(request: NextRequest) {
         nuevoEstado = "pendiente_pago"
     }
 
-    // Actualizar la orden
+    // Mapear metodo de pago de Wompi a nombre legible
+    const metodoPagoMap: Record<string, string> = {
+      "NEQUI": "Nequi",
+      "PSE": "PSE",
+      "CARD": "Tarjeta",
+      "BANCOLOMBIA_TRANSFER": "Bancolombia",
+      "BANCOLOMBIA_COLLECT": "Bancolombia",
+      "DAVIPLATA": "Daviplata",
+      "EFECTY": "Efecty",
+      "SU_RED": "Su Red",
+      "CASH": "Efectivo"
+    }
+    const metodoPagoReal = metodoPagoMap[transaction.payment_method_type] || transaction.payment_method_type
+
+    // Actualizar la orden con el metodo de pago real
     await prisma.order.update({
       where: { id: order.id },
       data: {
         estado: nuevoEstado,
-        // Guardar info de Wompi si los campos existen
-        // wompiTransactionId: transaction.id,
-        // wompiStatus: transaction.status,
+        metodoPago: metodoPagoReal, // Guardar el metodo de pago real
       }
     })
 

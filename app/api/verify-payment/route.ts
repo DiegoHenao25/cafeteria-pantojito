@@ -79,10 +79,27 @@ export async function GET(request: NextRequest) {
               nuevoEstado = "pendiente_pago"
           }
 
-          // Actualizar la orden
+          // Mapear metodo de pago de Wompi a nombre legible
+          const metodoPagoMap: Record<string, string> = {
+            "NEQUI": "Nequi",
+            "PSE": "PSE",
+            "CARD": "Tarjeta",
+            "BANCOLOMBIA_TRANSFER": "Bancolombia",
+            "BANCOLOMBIA_COLLECT": "Bancolombia",
+            "DAVIPLATA": "Daviplata",
+            "EFECTY": "Efecty",
+            "SU_RED": "Su Red",
+            "CASH": "Efectivo"
+          }
+          const metodoPagoReal = metodoPagoMap[transaction.payment_method_type] || transaction.payment_method_type
+
+          // Actualizar la orden con el metodo de pago real
           const updatedOrder = await prisma.order.update({
             where: { id: order.id },
-            data: { estado: nuevoEstado },
+            data: { 
+              estado: nuevoEstado,
+              metodoPago: metodoPagoReal // Guardar el metodo de pago real
+            },
             include: {
               orderItems: {
                 include: { product: true }
@@ -195,9 +212,26 @@ export async function POST(request: NextRequest) {
             nuevoEstado = "pendiente_pago"
         }
 
+        // Mapear metodo de pago
+        const metodoPagoMap: Record<string, string> = {
+          "NEQUI": "Nequi",
+          "PSE": "PSE",
+          "CARD": "Tarjeta",
+          "BANCOLOMBIA_TRANSFER": "Bancolombia",
+          "BANCOLOMBIA_COLLECT": "Bancolombia",
+          "DAVIPLATA": "Daviplata",
+          "EFECTY": "Efecty",
+          "SU_RED": "Su Red",
+          "CASH": "Efectivo"
+        }
+        const metodoPagoReal = metodoPagoMap[wompiData.data.payment_method_type] || wompiData.data.payment_method_type
+
         const updatedOrder = await prisma.order.update({
           where: { id: order.id },
-          data: { estado: nuevoEstado },
+          data: { 
+            estado: nuevoEstado,
+            metodoPago: metodoPagoReal
+          },
           include: {
             orderItems: {
               include: { product: true }
