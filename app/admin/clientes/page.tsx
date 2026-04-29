@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { ArrowLeft, Search, Users, ShoppingBag, DollarSign, RefreshCw, CreditCard, Calendar, Mail, User } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { ArrowLeft, Search, Users, ShoppingBag, DollarSign, RefreshCw, CreditCard, Calendar, Mail, User, Clock, Package } from "lucide-react"
 
 interface Cliente {
   id: number
@@ -26,6 +33,19 @@ interface Estadisticas {
   totalPedidos: number
 }
 
+interface PedidoDetalle {
+  id: number
+  total: number
+  estado: string
+  metodoPago: string
+  createdAt: string
+  items: {
+    nombre: string
+    cantidad: number
+    precio: number
+  }[]
+}
+
 export default function ClientesPage() {
   const router = useRouter()
   const [clientes, setClientes] = useState<Cliente[]>([])
@@ -33,6 +53,9 @@ export default function ClientesPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [refreshing, setRefreshing] = useState(false)
+  const [selectedCliente, setSelectedCliente] = useState<Cliente | null>(null)
+  const [pedidosCliente, setPedidosCliente] = useState<PedidoDetalle[]>([])
+  const [loadingPedidos, setLoadingPedidos] = useState(false)
 
   useEffect(() => {
     checkAuth()
@@ -82,6 +105,55 @@ export default function ClientesPage() {
       setLoading(false)
       setRefreshing(false)
     }
+  }
+
+  const loadPedidosCliente = async (clienteId: number) => {
+    setLoadingPedidos(true)
+    try {
+      const response = await fetch(`/api/admin/clientes/${clienteId}/pedidos`)
+      if (response.ok) {
+        const data = await response.json()
+        setPedidosCliente(data.pedidos)
+      }
+    } catch (error) {
+      console.error("Error cargando pedidos:", error)
+    } finally {
+      setLoadingPedidos(false)
+    }
+  }
+
+  const handleVerHistorial = (cliente: Cliente) => {
+    setSelectedCliente(cliente)
+    loadPedidosCliente(cliente.id)
+  }
+
+  const getEstadoBadge = (estado: string) => {
+    const badges: Record<string, { bg: string; text: string; label: string }> = {
+      pendiente: { bg: "bg-[#e9e076]/30", text: "text-[#655642]", label: "Pendiente" },
+      pendiente_pago: { bg: "bg-[#e9e076]/50", text: "text-[#655642]", label: "Esperando Pago" },
+      pagado: { bg: "bg-[#7BB39C]/20", text: "text-[#7BB39C]", label: "Pagado" },
+      en_proceso: { bg: "bg-[#d38488]/20", text: "text-[#d38488]", label: "En Proceso" },
+      listo: { bg: "bg-[#7BB39C]/30", text: "text-[#7BB39C]", label: "Listo" },
+      entregado: { bg: "bg-[#7BB39C]/40", text: "text-[#7BB39C]", label: "Entregado" },
+      completado: { bg: "bg-[#7BB39C]/40", text: "text-[#7BB39C]", label: "Completado" },
+      cancelado: { bg: "bg-red-100", text: "text-red-600", label: "Cancelado" },
+    }
+    const style = badges[estado] || badges.pendiente
+    return <Badge className={`${style.bg} ${style.text} border-0`}>{style.label}</Badge>
+  }
+
+  const getMetodoPagoColor = (metodo: string) => {
+    const colores: Record<string, string> = {
+      Nequi: "bg-[#E6007E]/20 text-[#E6007E]",
+      PSE: "bg-blue-100 text-blue-700",
+      Bancolombia: "bg-yellow-100 text-yellow-700",
+      Daviplata: "bg-red-100 text-red-700",
+      Tarjeta: "bg-purple-100 text-purple-700",
+      Wompi: "bg-indigo-100 text-indigo-700",
+      Efectivo: "bg-green-100 text-green-700",
+      wompi: "bg-indigo-100 text-indigo-700",
+    }
+    return colores[metodo] || "bg-gray-100 text-gray-700"
   }
 
   const filteredClientes = clientes.filter(
@@ -288,6 +360,19 @@ export default function ClientesPage() {
                           <p className="font-medium text-[#655642] text-sm">{formatDate(cliente.ultimaCompra)}</p>
                         </div>
                       </div>
+
+                      {/* Boton ver historial */}
+                      {cliente.pedidosPagados > 0 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleVerHistorial(cliente)}
+                          className="border-[#d38488]/30 text-[#d38488] hover:bg-[#d38488]/10 mt-3 md:mt-0"
+                        >
+                          <Clock className="w-4 h-4 mr-2" />
+                          Ver Historial
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -296,6 +381,72 @@ export default function ClientesPage() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Modal de historial de pedidos */}
+      <Dialog open={!!selectedCliente} onOpenChange={() => setSelectedCliente(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-[#655642] flex items-center gap-2">
+              <Package className="w-5 h-5 text-[#d38488]" />
+              Historial de {selectedCliente?.nombre}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {loadingPedidos ? (
+            <div className="text-center py-8">
+              <div className="w-8 h-8 border-4 border-[#d38488]/30 border-t-[#d38488] rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-[#655642]/80">Cargando pedidos...</p>
+            </div>
+          ) : pedidosCliente.length === 0 ? (
+            <div className="text-center py-8">
+              <Package className="w-12 h-12 text-[#d38488]/30 mx-auto mb-4" />
+              <p className="text-[#655642]/80">No hay pedidos registrados</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {pedidosCliente.map((pedido) => (
+                <Card key={pedido.id} className="border-[#d38488]/20">
+                  <CardContent className="pt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="font-bold text-[#655642]">Pedido #{pedido.id}</span>
+                        {getEstadoBadge(pedido.estado)}
+                      </div>
+                      <span className="font-bold text-[#d38488]">{formatCurrency(pedido.total)}</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-[#655642]/70 mb-3">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {formatDate(pedido.createdAt)}
+                      </span>
+                      <Badge className={getMetodoPagoColor(pedido.metodoPago)}>
+                        {pedido.metodoPago}
+                      </Badge>
+                    </div>
+                    {pedido.items && pedido.items.length > 0 && (
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-[#655642]/60 mb-2">Productos:</p>
+                        <ul className="space-y-1">
+                          {pedido.items.map((item, idx) => (
+                            <li key={idx} className="flex justify-between text-sm">
+                              <span className="text-[#655642]">
+                                {item.cantidad}x {item.nombre}
+                              </span>
+                              <span className="text-[#655642]/70">
+                                {formatCurrency(item.precio * item.cantidad)}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

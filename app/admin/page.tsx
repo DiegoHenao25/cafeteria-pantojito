@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu, Users, User, FileText, Coffee } from "lucide-react"
+import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu, Users, User, FileText, Coffee, BarChart3 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -392,6 +392,14 @@ export default function AdminDashboard() {
             </Button>
             <Button
               variant="outline"
+              onClick={() => router.push("/admin/estadisticas")}
+              className="border-[#7BB39C] text-[#7BB39C] hover:bg-[#7BB39C]/20"
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Estadisticas
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => router.push("/menu")}
               className="border-2 border-[#d38488] text-[#655642] hover:bg-[#d38488]/10"
             >
@@ -454,13 +462,21 @@ export default function AdminDashboard() {
                 <ClipboardList className="w-4 h-4 mr-2" />
                 Ver Pedidos
               </Button>
-              <Button
-                variant="outline"
+<Button
+                variant="ghost"
                 onClick={() => { setShowMobileMenu(false); router.push("/admin/clientes") }}
-                className="w-full justify-start border-2 border-[#e9e076] text-[#655642] hover:bg-[#e9e076]/20"
+                className="w-full justify-start text-[#655642] hover:bg-[#e9e076]/20"
               >
                 <Users className="w-4 h-4 mr-2" />
                 Historial Clientes
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => { setShowMobileMenu(false); router.push("/admin/estadisticas") }}
+                className="w-full justify-start text-[#7BB39C] hover:bg-[#7BB39C]/20"
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Estadisticas
               </Button>
               <Button
                 variant="outline"
