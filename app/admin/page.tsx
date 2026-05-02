@@ -708,18 +708,36 @@ export default function AdminDashboard() {
                   <p className="text-xs text-[#655642]/80">Formatos: JPG, PNG, WEBP. Tamano maximo: 5MB</p>
                 </div>
               </div>
-              <div className="flex justify-end gap-2 pt-4 border-t border-[#d38488]/30">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => { setShowAddProduct(false); setEditingProduct(null); resetForm() }}
-                  className="border-[#d38488]/30 text-[#655642] hover:bg-[#d38488]/10"
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit" className="bg-[#d38488] hover:bg-[#d38488]/100 text-white">
-                  {editingProduct ? "Guardar Cambios" : "Crear Producto"}
-                </Button>
+              <div className="flex justify-between pt-4 border-t border-[#d38488]/30">
+                {/* Boton eliminar solo cuando se edita */}
+                {editingProduct ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowAddProduct(false)
+                      handleDelete(editingProduct.id, editingProduct.nombre)
+                    }}
+                    className="border-red-300 text-red-500 hover:bg-red-50 hover:text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Eliminar
+                  </Button>
+                ) : <div />}
+                
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => { setShowAddProduct(false); setEditingProduct(null); resetForm() }}
+                    className="border-[#d38488]/30 text-[#655642] hover:bg-[#d38488]/10"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button type="submit" className="bg-[#d38488] hover:bg-[#d38488]/100 text-white">
+                    {editingProduct ? "Guardar Cambios" : "Crear Producto"}
+                  </Button>
+                </div>
               </div>
             </form>
           </DialogContent>
