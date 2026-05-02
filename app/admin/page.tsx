@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu, Users, User, FileText, Coffee, BarChart3 } from "lucide-react"
+import { Trash2, Edit, Plus, LogOut, ClipboardList, Menu, Users, User, FileText, Coffee, BarChart3, AlertTriangle } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,6 +53,12 @@ export default function AdminDashboard() {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
+  
+  // Estados para modales de confirmacion
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+  const [deleteAlertMessage, setDeleteAlertMessage] = useState("")
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  const [confirmDeleteData, setConfirmDeleteData] = useState<{type: 'product' | 'category', id: number, name: string} | null>(null)
   
   const SUPER_ADMIN_EMAIL = "diegohenao.cortes@gmail.com"
 
@@ -142,20 +148,9 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Estas seguro de eliminar este producto?")) return
-
-    try {
-      const response = await fetch(`/api/products/${id}`, {
-        method: "DELETE",
-      })
-
-      if (response.ok) {
-        await loadData()
-      }
-    } catch (error) {
-      console.error("Error eliminando producto:", error)
-    }
+  const handleDelete = (id: number, productName: string) => {
+    setConfirmDeleteData({ type: 'product', id, name: productName })
+    setShowConfirmDelete(true)
   }
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -184,26 +179,40 @@ export default function AdminDashboard() {
     const categoryProducts = products.filter((p) => p.categoryId === id)
     
     if (categoryProducts.length > 0) {
-      alert(`No puedes eliminar "${categoryName}" porque tiene ${categoryProducts.length} productos asociados. Elimina o mueve los productos primero.`)
+      setDeleteAlertMessage(`No puedes eliminar "${categoryName}" porque tiene ${categoryProducts.length} producto(s) asociado(s). Elimina los productos primero.`)
+      setShowDeleteAlert(true)
       return
     }
 
-    if (!confirm(`Estas seguro de eliminar la categoria "${categoryName}"?`)) return
+    // Mostrar modal de confirmacion
+    setConfirmDeleteData({ type: 'category', id, name: categoryName })
+    setShowConfirmDelete(true)
+  }
+
+  const confirmDeleteAction = async () => {
+    if (!confirmDeleteData) return
 
     try {
-      const response = await fetch(`/api/categories/${id}`, {
-        method: "DELETE",
-      })
+      const endpoint = confirmDeleteData.type === 'category' 
+        ? `/api/categories/${confirmDeleteData.id}`
+        : `/api/products/${confirmDeleteData.id}`
+
+      const response = await fetch(endpoint, { method: "DELETE" })
 
       if (response.ok) {
         await loadData()
       } else {
         const data = await response.json()
-        alert(data.error || "Error al eliminar categoria")
+        setDeleteAlertMessage(data.error || "Error al eliminar")
+        setShowDeleteAlert(true)
       }
     } catch (error) {
-      console.error("Error eliminando categoria:", error)
-      alert("Error de conexion al eliminar categoria")
+      console.error("Error eliminando:", error)
+      setDeleteAlertMessage("Error de conexion al eliminar")
+      setShowDeleteAlert(true)
+    } finally {
+      setShowConfirmDelete(false)
+      setConfirmDeleteData(null)
     }
   }
 
@@ -586,7 +595,7 @@ export default function AdminDashboard() {
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => handleDelete(product.id)}
+                              onClick={() => handleDelete(product.id, product.nombre)}
                               className="flex-1 h-6 px-1 text-xs"
                             >
                               <Trash2 className="w-3 h-3" />
@@ -749,6 +758,70 @@ export default function AdminDashboard() {
                 </Button>
               </div>
             </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de Alerta (cuando no se puede eliminar) */}
+        <Dialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+          <DialogContent className="bg-white border-2 border-[#e9e076]/50 max-w-md">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-[#e9e076]/20 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-[#e9e076]" />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-bold text-[#655642]">No se puede eliminar</DialogTitle>
+                </div>
+              </div>
+              <DialogDescription className="text-[#655642]/80 mt-3 text-base">
+                {deleteAlertMessage}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end mt-4">
+              <Button 
+                onClick={() => setShowDeleteAlert(false)}
+                className="bg-[#e9e076] hover:bg-[#e9e076]/80 text-[#655642] font-semibold"
+              >
+                Entendido
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de Confirmacion de Eliminacion */}
+        <Dialog open={showConfirmDelete} onOpenChange={setShowConfirmDelete}>
+          <DialogContent className="bg-white border-2 border-red-200 max-w-md">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                  <Trash2 className="w-6 h-6 text-red-500" />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-bold text-[#655642]">Confirmar eliminacion</DialogTitle>
+                </div>
+              </div>
+              <DialogDescription className="text-[#655642]/80 mt-3 text-base">
+                Estas seguro de eliminar {confirmDeleteData?.type === 'category' ? 'la categoria' : 'el producto'} <span className="font-semibold text-[#655642]">"{confirmDeleteData?.name}"</span>? Esta accion no se puede deshacer.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end gap-3 mt-4">
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  setShowConfirmDelete(false)
+                  setConfirmDeleteData(null)
+                }}
+                className="border-[#d38488]/30 text-[#655642] hover:bg-gray-100"
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={confirmDeleteAction}
+                className="bg-red-500 hover:bg-red-600 text-white"
+              >
+                Si, eliminar
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

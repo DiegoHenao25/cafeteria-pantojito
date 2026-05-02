@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Clock, Package, CheckCircle2, XCircle, ShoppingBag } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useGlobalTimer } from "@/hooks/use-global-timer"
+import { CountdownBadge } from "@/components/countdown-badge"
 
 interface OrderItem {
   id: number
@@ -30,6 +32,9 @@ export default function PedidosPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  
+  // Hook para temporizador global
+  const { getTimeRemaining, formatTime, getTimeColor, getProgress } = useGlobalTimer()
 
   useEffect(() => {
     loadOrders()
@@ -171,12 +176,24 @@ export default function PedidosPage() {
             {orders.map((order) => (
               <Card key={order.id} className="overflow-hidden border-[#d38488]/20">
                 <CardHeader className="bg-[#d38488]/10 border-b border-[#d38488]/20">
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between flex-wrap gap-2">
                     <div>
                       <CardTitle className="text-lg text-[#655642]">Pedido #{order.id}</CardTitle>
                       <CardDescription className="text-[#655642]/80">{formatDate(order.createdAt)}</CardDescription>
                     </div>
-                    {getEstadoBadge(order.estado)}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {/* Temporizador de cuenta regresiva */}
+                      {order.tiempoRecogida && (order.estado === "pendiente" || order.estado === "en_proceso") && (
+                        <CountdownBadge
+                          timeRemaining={getTimeRemaining(order.createdAt, order.tiempoRecogida)}
+                          formattedTime={formatTime(getTimeRemaining(order.createdAt, order.tiempoRecogida))}
+                          color={getTimeColor(getTimeRemaining(order.createdAt, order.tiempoRecogida))}
+                          progress={getProgress(order.createdAt, order.tiempoRecogida)}
+                          size="sm"
+                        />
+                      )}
+                      {getEstadoBadge(order.estado)}
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-6">
