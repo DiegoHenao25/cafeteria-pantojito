@@ -36,7 +36,7 @@ export async function GET() {
     hoy.setHours(hoy.getHours() + 5)
     const inicioSemana = new Date(hoy)
     inicioSemana.setDate(hoy.getDate() - hoy.getDay())
-    const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1)
+    const inicioMes = new Date(nowColombia.getFullYear(), nowColombia.getMonth(), 1)
     const hace30Dias = new Date(hoy)
     hace30Dias.setDate(hoy.getDate() - 30)
 
