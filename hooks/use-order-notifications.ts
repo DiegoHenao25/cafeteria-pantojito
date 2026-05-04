@@ -121,6 +121,14 @@ export function useOrderNotifications(orders: Order[], currentTime: number) {
       // Inicializar set de intervalos notificados si no existe
       if (!notifiedIntervalsRef.current[order.id]) {
         notifiedIntervalsRef.current[order.id] = new Set()
+        // Marcar como notificados todos los intervalos que ya pasaron
+        // para evitar notificaciones multiples al cargar
+        const intervals = [30, 25, 20, 15, 10, 5, 3, 1, 0]
+        intervals.forEach(i => {
+          if (remainingMinutes < i) {
+            notifiedIntervalsRef.current[order.id].add(i)
+          }
+        })
       }
 
       const notified = notifiedIntervalsRef.current[order.id]
@@ -129,9 +137,12 @@ export function useOrderNotifications(orders: Order[], currentTime: number) {
       const notificationIntervals = [30, 25, 20, 15, 10, 5, 3, 1, 0]
       
       notificationIntervals.forEach(interval => {
-        // Notificar cuando el tiempo restante coincide con el intervalo
-        // y no se ha notificado aun
-        if (remainingMinutes <= interval && !notified.has(interval)) {
+        // Notificar SOLO cuando el tiempo restante esta exactamente en el rango del intervalo
+        // (entre interval y interval-1 minutos) y no se ha notificado aun
+        const shouldNotify = remainingMinutes === interval || 
+          (remainingMinutes < interval && remainingMinutes >= interval - 1 && !notified.has(interval))
+        
+        if (shouldNotify && !notified.has(interval)) {
           notified.add(interval)
 
           const productName = order.orderItems?.[0]?.product?.nombre || "Pedido"

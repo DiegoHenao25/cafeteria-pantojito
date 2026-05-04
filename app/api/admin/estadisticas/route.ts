@@ -2,6 +2,20 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 
+// Funcion para obtener fecha en hora Colombia (UTC-5)
+function getColombiaDate(date: Date = new Date()): Date {
+  // Convertir a hora Colombia (UTC-5)
+  const colombiaOffset = -5 * 60 // -5 horas en minutos
+  const utc = date.getTime() + (date.getTimezoneOffset() * 60000)
+  return new Date(utc + (colombiaOffset * 60000))
+}
+
+// Obtener hora en Colombia de una fecha
+function getColombiaHour(date: Date): number {
+  const colombiaDate = getColombiaDate(date)
+  return colombiaDate.getHours()
+}
+
 export async function GET() {
   try {
     const session = await getSession()
@@ -15,8 +29,11 @@ export async function GET() {
       return NextResponse.json({ error: "No autorizado" }, { status: 403 })
     }
 
-    const now = new Date()
-    const hoy = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    // Usar hora Colombia
+    const nowColombia = getColombiaDate()
+    const hoy = new Date(nowColombia.getFullYear(), nowColombia.getMonth(), nowColombia.getDate())
+    // Ajustar hoy a UTC para comparar con la BD
+    hoy.setHours(hoy.getHours() + 5)
     const inicioSemana = new Date(hoy)
     inicioSemana.setDate(hoy.getDate() - hoy.getDay())
     const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -141,12 +158,12 @@ export async function GET() {
       })
     }
 
-    // Ventas por hora (hoy)
+    // Ventas por hora (hoy) - usando hora Colombia
     const ventasPorHora: { hora: string; pedidos: number }[] = []
     for (let h = 6; h <= 22; h++) {
       const pedidosHora = pedidosHoy.filter(p => {
-        const hora = new Date(p.createdAt).getHours()
-        return hora === h
+        const horaColombia = getColombiaHour(new Date(p.createdAt))
+        return horaColombia === h
       })
       ventasPorHora.push({
         hora: `${h}:00`,
