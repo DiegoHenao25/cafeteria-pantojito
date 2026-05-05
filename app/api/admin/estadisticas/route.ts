@@ -72,11 +72,11 @@ export async function GET() {
       where: { estado: { in: estadosPagados } }
     })
 
-    // Calcular ingresos
-    const ingresosHoy = pedidosHoy.reduce((sum, p) => sum + p.total, 0)
-    const ingresosSemana = pedidosSemana.reduce((sum, p) => sum + p.total, 0)
-    const ingresosMes = pedidosMes.reduce((sum, p) => sum + p.total, 0)
-    const ingresosTotales = todosPedidos.reduce((sum, p) => sum + p.total, 0)
+    // Calcular ingresos (convertir Decimal a numero)
+    const ingresosHoy = pedidosHoy.reduce((sum, p) => sum + Number(p.total), 0)
+    const ingresosSemana = pedidosSemana.reduce((sum, p) => sum + Number(p.total), 0)
+    const ingresosMes = pedidosMes.reduce((sum, p) => sum + Number(p.total), 0)
+    const ingresosTotales = todosPedidos.reduce((sum, p) => sum + Number(p.total), 0)
 
     // Productos mas vendidos (ultimos 30 dias)
     const orderItems = await prisma.orderItem.findMany({
@@ -102,7 +102,7 @@ export async function GET() {
         }
       }
       productosVendidos[item.productId].cantidad += item.cantidad
-      productosVendidos[item.productId].ingresos += item.precio * item.cantidad
+      productosVendidos[item.productId].ingresos += Number(item.precio) * item.cantidad
     })
 
     const topProductos = Object.entries(productosVendidos)
@@ -133,7 +133,7 @@ export async function GET() {
         nombre: cliente.nombre || cliente.email.split("@")[0],
         email: cliente.email,
         pedidos: cliente.orders.length,
-        totalGastado: cliente.orders.reduce((sum, o) => sum + o.total, 0)
+        totalGastado: cliente.orders.reduce((sum, o) => sum + Number(o.total), 0)
       }))
       .sort((a, b) => b.totalGastado - a.totalGastado)
       .slice(0, 5)
@@ -154,7 +154,7 @@ export async function GET() {
       ventasPorDia.push({
         fecha: dia.toLocaleDateString("es-CO", { weekday: "short", day: "numeric" }),
         pedidos: pedidosDia.length,
-        ingresos: pedidosDia.reduce((sum, p) => sum + p.total, 0)
+        ingresos: pedidosDia.reduce((sum, p) => sum + Number(p.total), 0)
       })
     }
 
